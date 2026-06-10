@@ -2,13 +2,18 @@
 
 import { useState, useEffect, useRef } from "react";
 
-/* ─── Icons (inline SVG, minimal & sharp) ─────────────────────────────── */
-function IconLock({ size = 16 }: { size?: number }) {
+/* ─── Icons (Calm & Open) ─────────────────────────────── */
+function IconSunrise({ size = 16 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="7" width="10" height="8" rx="2" />
-      <path d="M5 7V5a3 3 0 0 1 6 0v2" />
-      <circle cx="8" cy="11" r="1" fill="currentColor" stroke="none" />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2v6" />
+      <path d="m4.93 10.93 1.41 1.41" />
+      <path d="M2 18h20" />
+      <path d="M20 14h2" />
+      <path d="m19.07 10.93-1.41 1.41" />
+      <path d="M22 22H2" />
+      <path d="m8 6 4-4 4 4" />
+      <path d="M16 18a4 4 0 0 0-8 0" />
     </svg>
   );
 }
@@ -41,14 +46,6 @@ function IconX() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
       <path d="M3 3l8 8M11 3l-8 8" />
-    </svg>
-  );
-}
-
-function IconMinus() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-      <path d="M3 7h8" />
     </svg>
   );
 }
@@ -97,14 +94,14 @@ function Nav() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const links = ["How it works", "Features", "Platforms", "Contribute", "FAQ"];
+  const links = ["Philosophy", "Protect", "Commit", "Contribute", "FAQ"];
 
   return (
     <nav className={scrolled || mobileOpen ? "scrolled" : ""}>
       <div className="nav-inner">
         <a href="/" className="nav-brand" aria-label="Reclaim Home">
           <span className="nav-brand-mark" aria-hidden="true">
-            <IconLock size={14} />
+            <IconSunrise size={18} />
           </span>
           Reclaim
         </a>
@@ -121,7 +118,7 @@ function Nav() {
             <a href="https://github.com/reclaim-app/reclaim" className="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub">
               <IconGithub /> GitHub
             </a>
-            <a href="#download" className="btn btn-primary">Get Started</a>
+            <a href="#choose-freedom" className="btn btn-primary">Take Control</a>
           </div>
         </div>
 
@@ -149,8 +146,8 @@ function Nav() {
           <a href="https://github.com/reclaim-app/reclaim" className="btn btn-secondary" target="_blank" rel="noopener noreferrer" style={{ width: '100%' }}>
             <IconGithub /> GitHub
           </a>
-          <a href="#download" className="btn btn-primary" onClick={() => setMobileOpen(false)} style={{ width: '100%' }}>
-            Get Started
+          <a href="#choose-freedom" className="btn btn-primary" onClick={() => setMobileOpen(false)} style={{ width: '100%' }}>
+            Take Control
           </a>
         </div>
       </div>
@@ -162,26 +159,25 @@ function Nav() {
 function Hero() {
   return (
     <section className="hero" id="top">
-      <div className="hero-glow" />
-      <div className="hero-inner">
+      <div className="wrap">
         <div className="hero-tag">
-          <span className="dot" aria-hidden="true" />
-          Free &amp; Open Source · MIT License
+          <span className="dot" aria-hidden="true" style={{ background: "var(--accent-primary)" }} />
+          A Movement for Digital Autonomy
         </div>
         <h1>
-          Take back<br />
-          <span style={{ color: "var(--accent-light)" }}>what matters.</span>
+          Your attention<br />
+          belongs to you.
         </h1>
         <p className="hero-sub">
-          Your attention belongs to you. Reclaim blocks YouTube Shorts, Instagram Reels,
-          TikTok and all short-form content across every device — permanently.
+          Every hour reclaimed is an hour lived intentionally. Protect your focus from 
+          platforms engineered to maximize endless consumption.
         </p>
         <div className="hero-actions">
-          <a href="https://github.com/reclaim-app/reclaim" className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
-            <IconGithub /> View on GitHub
+          <a href="#choose-freedom" className="btn btn-primary btn-lg">
+            Choose Freedom
           </a>
-          <a href="#how-it-works" className="btn btn-secondary btn-lg">
-            How it works <IconArrow />
+          <a href="#philosophy" className="btn btn-secondary btn-lg">
+            Read the Manifesto <IconArrow />
           </a>
         </div>
       </div>
@@ -189,25 +185,24 @@ function Hero() {
   );
 }
 
-
 /* ─── Platforms ─────────────────────────────────────────────────────────── */
 function Platforms() {
   const r = useReveal();
   const items = [
-    { name: "YouTube",   what: "Shorts feed & player" },
-    { name: "Instagram", what: "Reels tab & player" },
-    { name: "TikTok",    what: "Entire domain" },
-    { name: "Facebook",  what: "Reels section" },
-    { name: "X",         what: "Video feed" },
-    { name: "Reddit",    what: "Short video feed" },
+    { name: "YouTube",   what: "Shorts feed replaced with calm" },
+    { name: "Instagram", what: "Reels tab protected" },
+    { name: "TikTok",    what: "Endless scrolling bypassed" },
+    { name: "Facebook",  what: "Reels section recovered" },
+    { name: "X",         what: "Video feed cleared" },
+    { name: "Reddit",    what: "Short video feed silenced" },
   ];
   return (
-    <section className="section" id="platforms">
+    <section className="section" id="protect">
       <div className="wrap">
         <div className="sh reveal" ref={useReveal()}>
-          <span className="sh-tag">Platforms</span>
-          <h2>Blocked everywhere it matters</h2>
-          <p>Reclaim targets every surface where short-form content hijacks your attention.</p>
+          <span className="sh-tag">Protect</span>
+          <h2>A sanctuary across every platform</h2>
+          <p>Reclaim actively removes the engagement hooks and dopamine loops across the web, leaving only what you intentionally seek.</p>
         </div>
         <div className="grid-container platforms-grid reveal" ref={r}>
           {items.map(p => (
@@ -228,37 +223,32 @@ function HowItWorks() {
   const steps = [
     {
       n: "01",
-      title: "Install on your devices",
-      body: "Download the Android app, install the browser extension, and run the Windows agent. All three sync automatically to your account.",
+      title: "Establish boundaries",
+      body: "Decide what platforms deserve your energy. Protect your devices by installing the open-source filters.",
     },
     {
       n: "02",
-      title: "Configure your blocks",
-      body: "Choose which platforms to block, set daily time limits, and schedule focus windows — for example, no Shorts from 9 AM to 6 PM on weekdays.",
+      title: "Invite accountability",
+      body: "Choose someone who supports your growth. They help you stay grounded when impulse tries to take over.",
     },
     {
       n: "03",
-      title: "Add an accountability partner",
-      body: "Invite someone you trust. They receive unlock requests and see your progress. This is what makes restrictions actually hold.",
+      title: "Protect your mornings",
+      body: "Schedule deep intent windows. For example, choose to keep your phone free of short-form content before 12 PM.",
     },
     {
       n: "04",
-      title: "Enable Hard Mode",
-      body: "Commit to 30, 60, or 90 days. Unlocking requires partner approval, a recovery password, and a 24-hour waiting period. Deliberately difficult.",
-    },
-    {
-      n: "05",
-      title: "Watch the data",
-      body: "Track videos blocked, hours recovered, and daily streaks. The analytics are confronting — and motivating.",
+      title: "Observe your growth",
+      body: "Watch your reclaimed hours accumulate. Translate that time into reading, creating, or simply resting without guilt.",
     },
   ];
   return (
-    <section className="section" id="how-it-works">
+    <section className="section" id="philosophy">
       <div className="wrap">
         <div className="sh reveal" ref={useReveal()}>
-          <span className="sh-tag">How it works</span>
-          <h2>Straightforward. Effective.</h2>
-          <p>Five steps to permanently changing your relationship with short-form content.</p>
+          <span className="sh-tag">Philosophy</span>
+          <h2>The path to reclaiming your time</h2>
+          <p>It is not about restriction. It is about creating deliberate space so you can choose what to do with your life.</p>
         </div>
         <div className="steps reveal" ref={useReveal()}>
           {steps.map(s => (
@@ -279,20 +269,18 @@ function HowItWorks() {
 /* ─── Features ──────────────────────────────────────────────────────────── */
 function Features() {
   const features = [
-    { label: "Enforcement",       title: "System-level blocking",          body: "Accessibility service and local VPN filtering on Android. Hosts-file management on Windows. Content is blocked before it loads." },
-    { label: "Accountability",    title: "Partner approval system",        body: "Unlock requests require your partner's response. They cannot be bypassed unilaterally. The wait period is enforced server-side." },
-    { label: "Analytics",         title: "Recovery dashboard",             body: "Videos blocked, hours recovered, and streak data — updated in real time across all your devices." },
-    { label: "Hard Mode",         title: "Commitment contracts",           body: "Set a 30, 60, or 90-day lock. Modifying rules requires partner approval, your recovery password, and a 24-hour cooldown." },
-    { label: "Focus Sessions",    title: "Scheduled blocking",             body: "Block everything during defined windows. Work, study, and deep-focus modes with custom start and end times." },
-    { label: "Sync",              title: "Real-time cross-device sync",    body: "Rules, sessions, streaks, and analytics stay consistent across Android, Windows, and the browser extension via Firebase Realtime." },
+    { label: "Deep Intent",       title: "Commitment contracts",           body: "Make a promise to yourself for 30, 60, or 90 days. Changing boundaries requires reflection and a 24-hour cooldown." },
+    { label: "Growth",            title: "Recovery analytics",             body: "Focus on what you gained. See your recovered hours translate into reading time, focused work, or healthy rest." },
+    { label: "Sanctuary",         title: "Focus sessions",                 body: "Protect your environment during defined windows. Create dedicated periods for deep work without the noise." },
+    { label: "Community",         title: "Accountability partner",         body: "Invite a friend to hold you to your goals. They review your boundary changes, ensuring you act with intention." },
   ];
   return (
-    <section className="section" id="features">
+    <section className="section" id="commit">
       <div className="wrap">
         <div className="sh reveal" ref={useReveal()}>
-          <span className="sh-tag">Features</span>
-          <h2>Designed to be difficult to bypass</h2>
-          <p>Every competitor can be disabled in seconds. Reclaim is built around the psychology of impulsive behavior.</p>
+          <span className="sh-tag">Commit</span>
+          <h2>Designed to foster intentionality</h2>
+          <p>Every feature is built to pause the impulse and remind you of the choices you made when your mind was clear.</p>
         </div>
         <div className="grid-container features-grid reveal" ref={useReveal()}>
           {features.map(f => (
@@ -311,22 +299,22 @@ function Features() {
 /* ─── Comparison ────────────────────────────────────────────────────────── */
 function Comparison() {
   const rows: [string, string, string, string, string, string][] = [
-    ["Android enforcement",         "Partial", "No",      "Yes",     "No",          "Yes"],
-    ["Windows desktop agent",       "Yes",     "No",      "No",      "Yes",         "Yes"],
-    ["VPN-level filtering",         "No",      "No",      "No",      "No",          "Yes"],
-    ["Accountability partner",      "No",      "No",      "No",      "No",          "Yes"],
-    ["Hard Mode / commitment lock", "Partial", "Yes",     "No",      "Partial",     "Yes"],
-    ["Recovery analytics",          "No",      "Partial", "Partial", "No",          "Yes"],
-    ["Cross-device real-time sync", "Yes",     "No",      "No",      "No",          "Yes"],
-    ["Free & open source",          "No",      "No",      "No",      "Partial",     "Yes"],
+    ["Protects focus on Android",    "Partial", "No",      "Yes",     "No",          "Yes"],
+    ["Protects focus on Windows",    "Yes",     "No",      "No",      "Yes",         "Yes"],
+    ["System-level calmness",        "No",      "No",      "No",      "No",          "Yes"],
+    ["Shared accountability",        "No",      "No",      "No",      "No",          "Yes"],
+    ["Deep Intent commitment",       "Partial", "Yes",     "No",      "Partial",     "Yes"],
+    ["Measures time recovered",      "No",      "Partial", "Partial", "No",          "Yes"],
+    ["Cross-device harmony",         "Yes",     "No",      "No",      "No",          "Yes"],
+    ["Free & open to everyone",      "No",      "No",      "No",      "Partial",     "Yes"],
   ];
-  const cols = ["Feature", "Freedom", "Opal", "One Sec", "Cold Turkey", "Reclaim"];
+  const cols = ["Capability", "Freedom", "Opal", "One Sec", "Cold Turkey", "Reclaim"];
 
   function Cell({ val, isLast }: { val: string; isLast: boolean }) {
     if (isLast) return <td className="fl">{val}</td>;
     if (val === "Yes")     return <td className="yes"><IconCheck /></td>;
-    if (val === "No")      return <td className="no"><IconX /></td>;
-    if (val === "Partial") return <td className="no"><IconMinus /></td>;
+    if (val === "No")      return <td className="no"></td>;
+    if (val === "Partial") return <td className="no"></td>;
     return <td>{val}</td>;
   }
 
@@ -334,9 +322,9 @@ function Comparison() {
     <section className="section">
       <div className="wrap">
         <div className="sh reveal" ref={useReveal()}>
-          <span className="sh-tag">Comparison</span>
-          <h2>How Reclaim stacks up</h2>
-          <p>No competitor combines Android enforcement, a desktop agent, and accountability systems in a single free tool.</p>
+          <span className="sh-tag">Landscape</span>
+          <h2>Why this movement matters</h2>
+          <p>We believe protecting your attention shouldn't require a monthly subscription. It should be a fundamental right.</p>
         </div>
         <div className="reveal table-wrapper" ref={useReveal()}>
           <table className="comp-table">
@@ -375,7 +363,7 @@ function Contribute() {
         </svg>
       ),
       title: "Write Code",
-      body: "Fix bugs, build features, improve performance. Every platform needs contributors.",
+      body: "Help us build a calmer web. Every platform needs stewards to maintain the filters.",
       link: "https://github.com/reclaim-app/reclaim"
     },
     {
@@ -384,8 +372,8 @@ function Contribute() {
           <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><circle cx="12" cy="16" r=".5" fill="currentColor" />
         </svg>
       ),
-      title: "Report Issues",
-      body: "Found a broken selector or a site update that bypasses blocking? Open an issue.",
+      title: "Report Intrusions",
+      body: "If a platform updates its interface to bypass our protection, let the community know.",
       link: "https://github.com/reclaim-app/reclaim/issues"
     },
     {
@@ -394,8 +382,8 @@ function Contribute() {
           <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
         </svg>
       ),
-      title: "Improve Docs",
-      body: "Write guides, improve setup instructions, translate to other languages.",
+      title: "Share Knowledge",
+      body: "Write guides, improve setup instructions, and share your recovery journey.",
       link: "https://github.com/reclaim-app/reclaim"
     },
     {
@@ -404,8 +392,8 @@ function Contribute() {
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
         </svg>
       ),
-      title: "Star the Repo",
-      body: "Starring on GitHub increases visibility and helps more people discover Reclaim.",
+      title: "Support the Cause",
+      body: "Star the repository to increase visibility so others can discover this sanctuary.",
       link: "https://github.com/reclaim-app/reclaim"
     },
   ];
@@ -414,10 +402,10 @@ function Contribute() {
       <div className="wrap">
         <div className="sh reveal" ref={useReveal()}>
           <span className="sh-tag">Open Source</span>
-          <h2>Built by the community, for the community</h2>
+          <h2>Built by humans, for humans</h2>
           <p>
-            Short-form content addiction is a public health issue manufactured by billion-dollar companies.
-            The tools to fight back should be free, transparent, and community-owned.
+            Algorithmic feeds are maintained by thousands of engineers optimizing for your attention. 
+            The only way we protect our time is by building the counter-movement together.
           </p>
         </div>
         <div className="grid-container contribute-grid reveal" ref={useReveal()}>
@@ -429,32 +417,6 @@ function Contribute() {
             </a>
           ))}
         </div>
-        <div className="code-block reveal" ref={useReveal()}>
-          <div className="code-bar">
-            <span className="code-dot" /><span className="code-dot" /><span className="code-dot" />
-          </div>
-          <div className="code-body">
-            <div className="c-dim"># Clone and contribute</div>
-            <div>
-              <span className="c-cmd">git</span>{" "}
-              <span className="c-str">clone</span>{" "}
-              <span className="c-path">https://github.com/reclaim-app/reclaim</span>
-            </div>
-            <div>
-              <span className="c-cmd">cd</span>{" "}
-              <span className="c-path">reclaim/focuslock-extension</span>
-            </div>
-            <div className="c-dim"># Load as unpacked extension — no build step</div>
-            <div>
-              <span className="c-cmd">cd</span>{" "}
-              <span className="c-path">../focuslock-web</span>{" "}
-              <span className="c-dim">&amp;&amp;</span>{" "}
-              <span className="c-cmd">npm</span>{" "}
-              <span className="c-str">run dev</span>
-            </div>
-            <div><span className="c-cursor" /></div>
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -465,35 +427,23 @@ function FAQ() {
   const [open, setOpen] = useState<number | null>(null);
   const items = [
     {
-      q: "Can I completely bypass Reclaim?",
-      a: "As the device owner you always have ultimate control — Reclaim does not claim otherwise. What it does is create deliberate friction: 24-hour waiting periods, accountability partner approval, a recovery password, and cooldown delays. The goal is making impulsive bypasses psychologically costly enough that you choose not to.",
+      q: "Am I giving up control of my devices?",
+      a: "Absolutely not. Reclaim is built on the philosophy that you are the ultimate owner of your devices. We simply introduce deliberate friction—like a 24-hour waiting period or partner approval—so that your intentional choices can override your momentary impulses.",
     },
     {
-      q: "How does the browser extension block content?",
-      a: "The extension uses MutationObserver to detect and remove Shorts, Reels, and video sections as platforms load them dynamically. For TikTok, it intercepts the page before any content renders. Selectors are updated whenever platforms change their DOM structure — you can contribute updates directly on GitHub.",
+      q: "How does the browser extension protect my focus?",
+      a: "The extension peacefully removes Shorts, Reels, and engaging video sections as the page loads. It removes the visual noise so you can use the platform for its utility without getting pulled into the infinite scroll.",
     },
     {
-      q: "Will the Android app drain my battery?",
-      a: "The local VPN layer uses DNS-only interception, not full packet inspection, which is extremely lightweight. The Accessibility Service only activates on window focus changes. In testing, Reclaim adds under 2% to daily battery usage.",
-    },
-    {
-      q: "What happens if my partner does not respond to an unlock request?",
-      a: "Unlock requests expire after 72 hours with no response and are treated as rejected. You can send one request per 24 hours per rule. This prevents both abandonment and abuse.",
-    },
-    {
-      q: "Is my data private?",
-      a: "Analytics and violation data are stored in your personal Firestore document, accessible only to you and partners you explicitly invite. Reclaim does not sell data. The local VPN processes all traffic on-device — nothing is transmitted to our servers.",
-    },
-    {
-      q: "Can I contribute if I am not a developer?",
-      a: "Yes. The most valuable contributions are often issue reports: a YouTube update that broke the Shorts selector, a new TikTok subdomain that bypasses the VPN filter. You can also improve documentation, write guides, or help translate the app.",
+      q: "Is my recovery data private?",
+      a: "Yes. Your progress, recovered hours, and settings are stored privately in your database document. They are only shared with the accountability partner you explicitly invite. We have no interest in your data; we are interested in your freedom.",
     },
   ];
   return (
     <section className="section" id="faq">
       <div className="wrap">
         <div className="sh reveal" ref={useReveal()}>
-          <span className="sh-tag">FAQ</span>
+          <span className="sh-tag">Clarity</span>
           <h2>Common questions</h2>
         </div>
         <div className="faq reveal" ref={useReveal()}>
@@ -534,20 +484,20 @@ function FAQ() {
 function Download() {
   const r = useReveal();
   const cards = [
-    { platform: "Android",           tech: "Flutter · Kotlin",     label: "Download APK",    soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
-    { platform: "Chrome / Edge",      tech: "Manifest V3",          label: "Add to Browser",  soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
-    { platform: "Windows",            tech: "Electron · Node",      label: "Download .exe",   soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
+    { platform: "Android",           tech: "Flutter · Kotlin",     label: "Install APK",    soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
+    { platform: "Chrome / Edge",      tech: "Manifest V3",          label: "Add Sanctuary",  soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
+    { platform: "Windows",            tech: "Electron · Node",      label: "Install .exe",   soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
   ];
   return (
-    <section className="section" id="download">
+    <section className="section" id="choose-freedom">
       <div className="wrap">
         <div className="cta-banner reveal" ref={r}>
-          <span className="sh-tag">Download</span>
-          <h2>Install on every device</h2>
+          <span className="sh-tag">Begin</span>
+          <h2>Choose your time</h2>
           <p style={{ fontSize: "var(--text-lg)", color: "var(--text-secondary)", maxWidth: "500px", margin: "0 auto var(--space-4)" }}>
-            No account required to get started. Install, configure, and block in under five minutes.
+            Install the open-source tools across your devices. No account required to start creating space.
           </p>
-          <div className="grid-container download-grid">
+          <div className="download-grid">
             {cards.map(c => {
               const Tag = c.soon ? "div" : "a";
               return (
@@ -564,12 +514,6 @@ function Download() {
               );
             })}
           </div>
-          <div className="hero-actions">
-            <a href="https://github.com/reclaim-app/reclaim" className="btn btn-primary btn-lg" target="_blank" rel="noopener noreferrer">
-              <IconGithub /> Star on GitHub
-            </a>
-            <a href="#how-it-works" className="btn btn-secondary btn-lg">Read the Docs</a>
-          </div>
         </div>
       </div>
     </section>
@@ -585,17 +529,17 @@ function Footer() {
           <div>
             <a href="#top" className="footer-brand" aria-label="Reclaim Home">
               <span className="footer-brand-mark" aria-hidden="true">
-                <IconLock size={14} />
+                <IconSunrise size={18} />
               </span>
               Reclaim
             </a>
             <p className="footer-desc">
-              Your attention belongs to you. Free, open source, and built by the community.
+              Technology should serve you. Never the other way around. Free, open source, and built by the community.
             </p>
           </div>
           {[
-            { title: "Product",  links: ["How it works", "Features", "Platforms", "Download"] },
-            { title: "Project",  links: ["GitHub", "Changelog", "Contributing", "Roadmap"] },
+            { title: "Movement",  links: ["Philosophy", "Protect", "Commit", "Begin"] },
+            { title: "Project",  links: ["GitHub", "Manifesto", "Contributing", "Roadmap"] },
             { title: "Legal",    links: ["Privacy", "Terms", "MIT License", "Security"] },
           ].map(col => (
             <div className="footer-col" key={col.title}>
