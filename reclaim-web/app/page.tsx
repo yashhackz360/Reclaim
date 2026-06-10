@@ -509,7 +509,6 @@ function Download() {
     {
       platform: "Chrome / Edge",
       tech: "Manifest V3 · Vanilla JS",
-      icon: "🌐",
       source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-extension",
       downloadUrl: `${releaseBase}/reclaim-extension.zip`,
       downloadLabel: "Download ZIP",
@@ -519,7 +518,6 @@ function Download() {
     {
       platform: "Windows",
       tech: "Electron · Node.js",
-      icon: "🖥️",
       source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-desktop",
       downloadUrl: `${releaseBase}/reclaim-desktop.zip`,
       downloadLabel: "Download EXE",
@@ -529,7 +527,6 @@ function Download() {
     {
       platform: "Android",
       tech: "Flutter · Kotlin",
-      icon: "📱",
       source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-android",
       downloadUrl: null,
       downloadLabel: null,
@@ -551,7 +548,6 @@ function Download() {
             {cards.map(c => (
               <div className={`dl-card${c.comingSoon ? " dl-card-soon" : ""}`} key={c.platform}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
-                  <span style={{ fontSize: "22px" }}>{c.icon}</span>
                   <h3 className="dl-platform" style={{ margin: 0 }}>{c.platform}</h3>
                   {c.comingSoon && (
                     <span style={{
