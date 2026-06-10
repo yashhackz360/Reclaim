@@ -22,7 +22,7 @@ jobs:
         working-directory: reclaim-android/android
         run: |
           echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
-          echo "flutter.sdk=$(flutter --version --machine 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('flutterRoot',''))" || dirname $(dirname $(which flutter)))" >> local.properties
+          echo "flutter.sdk=$FLUTTER_ROOT" >> local.properties
           cat local.properties
       - name: Install dependencies
         working-directory: reclaim-android
