@@ -1,3 +1,4 @@
-﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-final authStateProvider = StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Alpha stub — Firebase auth will be integrated in v1.0
+final authStateProvider = StateProvider<bool>((ref) => false);
