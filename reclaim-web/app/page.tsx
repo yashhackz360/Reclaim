@@ -115,7 +115,7 @@ function Nav() {
             ))}
           </ul>
           <div className="nav-actions">
-            <a href="https://github.com/reclaim-app/reclaim" className="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub">
+            <a href="https://github.com/yashhackz360/Reclaim" className="btn btn-secondary" target="_blank" rel="noopener noreferrer" aria-label="View on GitHub">
               <IconGithub /> GitHub
             </a>
             <a href="#choose-freedom" className="btn btn-primary">Take Control</a>
@@ -143,7 +143,7 @@ function Nav() {
           ))}
         </ul>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '16px' }}>
-          <a href="https://github.com/reclaim-app/reclaim" className="btn btn-secondary" target="_blank" rel="noopener noreferrer" style={{ width: '100%' }}>
+          <a href="https://github.com/yashhackz360/Reclaim" className="btn btn-secondary" target="_blank" rel="noopener noreferrer" style={{ width: '100%' }}>
             <IconGithub /> GitHub
           </a>
           <a href="#choose-freedom" className="btn btn-primary" onClick={() => setMobileOpen(false)} style={{ width: '100%' }}>
@@ -364,7 +364,7 @@ function Contribute() {
       ),
       title: "Write Code",
       body: "Help us build a calmer web. Every platform needs stewards to maintain the filters.",
-      link: "https://github.com/reclaim-app/reclaim"
+      link: "https://github.com/yashhackz360/Reclaim"
     },
     {
       icon: (
@@ -374,7 +374,7 @@ function Contribute() {
       ),
       title: "Report Intrusions",
       body: "If a platform updates its interface to bypass our protection, let the community know.",
-      link: "https://github.com/reclaim-app/reclaim/issues"
+      link: "https://github.com/yashhackz360/Reclaim/issues"
     },
     {
       icon: (
@@ -384,7 +384,7 @@ function Contribute() {
       ),
       title: "Share Knowledge",
       body: "Write guides, improve setup instructions, and share your recovery journey.",
-      link: "https://github.com/reclaim-app/reclaim"
+      link: "https://github.com/yashhackz360/Reclaim"
     },
     {
       icon: (
@@ -394,7 +394,7 @@ function Contribute() {
       ),
       title: "Support the Cause",
       body: "Star the repository to increase visibility so others can discover this sanctuary.",
-      link: "https://github.com/reclaim-app/reclaim"
+      link: "https://github.com/yashhackz360/Reclaim"
     },
   ];
   return (
@@ -484,9 +484,9 @@ function FAQ() {
 function Download() {
   const r = useReveal();
   const cards = [
-    { platform: "Android",           tech: "Flutter · Kotlin",     label: "Install APK",    soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
-    { platform: "Chrome / Edge",      tech: "Manifest V3",          label: "Add Sanctuary",  soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
-    { platform: "Windows",            tech: "Electron · Node",      label: "Install .exe",   soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
+    { platform: "Android",           tech: "Flutter · Kotlin",     label: "View Source",    soon: false, href: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-android" },
+    { platform: "Chrome / Edge",      tech: "Manifest V3",          label: "View Source",    soon: false, href: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-extension" },
+    { platform: "Windows",            tech: "Electron · Node",      label: "View Source",    soon: false, href: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-desktop" },
   ];
   return (
     <section className="section" id="choose-freedom">
@@ -505,6 +505,8 @@ function Download() {
                   href={c.soon ? undefined : c.href} 
                   className={`dl-card${c.soon ? " soon" : ""}`} 
                   key={c.platform}
+                  target={c.soon ? undefined : "_blank"}
+                  rel={c.soon ? undefined : "noopener noreferrer"}
                   {...(c.soon ? { 'aria-disabled': true } : {})}
                 >
                   <h3 className="dl-platform">{c.platform}</h3>
@@ -547,7 +549,7 @@ function Footer() {
               <ul>
                 {col.links.map(l => (
                   <li key={l}>
-                    <a href={l === "GitHub" ? "https://github.com/reclaim-app/reclaim" : "#"} target={l === "GitHub" ? "_blank" : undefined} rel={l === "GitHub" ? "noopener noreferrer" : undefined}>
+                    <a href={l === "GitHub" ? "https://github.com/yashhackz360/Reclaim" : "#"} target={l === "GitHub" ? "_blank" : undefined} rel={l === "GitHub" ? "noopener noreferrer" : undefined}>
                       {l}
                     </a>
                   </li>

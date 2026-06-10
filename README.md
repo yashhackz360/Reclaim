@@ -32,11 +32,11 @@ We enforce focus across every major platform. Dive into whatever stack you know 
 
 ```text
 reclaim/
-├── focuslock-web/        # Marketing website (Next.js)
-├── focuslock-extension/  # Browser extension — Chrome, Edge, Firefox (MV3)
-├── focuslock-android/    # Android app (Flutter + Kotlin enforcement engine)
-├── focuslock-desktop/    # Windows Desktop Agent (Electron + Windows Service)
-└── focuslock-backend/    # Firebase backend (Cloud Functions, Firestore)
+├── reclaim-web/        # Marketing website (Next.js)
+├── reclaim-extension/  # Browser extension — Chrome, Edge, Firefox (MV3)
+├── reclaim-android/    # Android app (Flutter + Kotlin enforcement engine)
+├── reclaim-desktop/    # Windows Desktop Agent (Electron + Windows Service)
+└── reclaim-backend/    # Firebase backend (Cloud Functions, Firestore)
 ```
 
 ## Quick Start
@@ -44,12 +44,12 @@ reclaim/
 ### Browser Extension
 ```bash
 # No build step required
-# Load focuslock-extension/ as an unpacked extension in Chrome or Edge dev mode
+# Load reclaim-extension/ as an unpacked extension in Chrome or Edge dev mode
 ```
 
 ### Website (local dev)
 ```bash
-cd focuslock-web
+cd reclaim-web
 npm install
 npm run dev
 # → http://localhost:3000
@@ -57,21 +57,21 @@ npm run dev
 
 ### Android App
 ```bash
-cd focuslock-android
+cd reclaim-android
 flutter pub get
 flutter run
 ```
 
 ### Windows Agent
 ```bash
-cd focuslock-desktop
+cd reclaim-desktop
 npm install
 npm run dev
 ```
 
 ### Backend (Firebase Emulators)
 ```bash
-cd focuslock-backend/functions
+cd reclaim-backend/functions
 npm install
 firebase emulators:start
 ```

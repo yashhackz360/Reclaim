@@ -24,11 +24,11 @@ If you have an idea that helps users reclaim their focus, let's hear it. Open a 
 
 ## The Stack
 Reclaim is a monorepo. Jump into whatever layer you're most comfortable with:
-- `focuslock-web/`: The marketing site (Next.js, React)
-- `focuslock-extension/`: Browser extension (Manifest V3, Vanilla JS)
-- `focuslock-android/`: Android app (Flutter + Kotlin)
-- `focuslock-desktop/`: Windows Agent (Electron + Node)
-- `focuslock-backend/`: The backend (Firebase)
+- `reclaim-web/`: The marketing site (Next.js, React)
+- `reclaim-extension/`: Browser extension (Manifest V3, Vanilla JS)
+- `reclaim-android/`: Android app (Flutter + Kotlin)
+- `reclaim-desktop/`: Windows Agent (Electron + Node)
+- `reclaim-backend/`: The backend (Firebase)
 
 ## PR Guidelines
 1. Fork the repo and branch off `main`.
