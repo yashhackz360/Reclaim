@@ -1,6 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 class RuleEditorScreen extends StatelessWidget {
   final String? ruleId;
   const RuleEditorScreen({super.key, this.ruleId});
-  @override Widget build(BuildContext context) => Scaffold(body: Center(child: Text(ruleId == null ? 'New Rule' : 'Edit Rule: \')));
+  @override
+  Widget build(BuildContext context) {
+    final label = ruleId == null ? 'New Rule' : 'Edit Rule: ' + (ruleId ?? '');
+    return Scaffold(body: Center(child: Text(label)));
+  }
 }
