@@ -18,6 +18,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+      - name: Initialize Flutter Project
+        working-directory: reclaim-android
+        run: flutter create --org com.reclaim.app --project-name reclaim .
       - name: Install dependencies
         working-directory: reclaim-android
         run: flutter pub get
