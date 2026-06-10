@@ -581,7 +581,8 @@ nav.scrolled {
 /* ── DOWNLOAD / CTA ── */
 .download-grid {
   grid-template-columns: repeat(3, 1fr);
-  margin: var(--space-12) 0;
+  margin: var(--space-12) auto;
+  max-width: 900px;
 }
 
 /* Button override for download card semantics */
