@@ -18,23 +18,17 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-      - name: Initialize Flutter Project
-        working-directory: reclaim-android
-        run: flutter create --org com.reclaim.app --project-name reclaim .
       - name: Install dependencies
         working-directory: reclaim-android
         run: flutter pub get
-      - name: Build APK
+      - name: Build APK (debug)
         working-directory: reclaim-android
-        run: flutter build apk --release
-      - name: Rename APK
-        working-directory: reclaim-android
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/reclaim-android.apk
+        run: flutter build apk --debug
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: reclaim-android
-          path: reclaim-android/build/app/outputs/flutter-apk/reclaim-android.apk
+          path: reclaim-android/build/app/outputs/flutter-apk/app-debug.apk
 
   build-desktop:
     runs-on: windows-latest

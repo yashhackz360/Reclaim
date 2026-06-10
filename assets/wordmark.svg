@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" fill="none">
+  <!-- Horizontal wordmark lockup: icon + text -->
+
+  <!-- Icon mark (44x44, centered vertically) -->
+  <g transform="translate(12, 38)">
+    <!-- 3 rays -->
+    <line x1="22" y1="44" x2="22" y2="28" stroke="#D97706" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="22" y1="44" x2="9"  y2="36" stroke="#D97706" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="22" y1="44" x2="35" y2="36" stroke="#D97706" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Arc -->
+    <path d="M 6 44 A 16 16 0 0 1 38 44" stroke="#D97706" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <!-- Broken horizon -->
+    <line x1="0"  y1="44" x2="13" y2="44" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="31" y1="44" x2="44" y2="44" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Wordmark "Reclaim" -->
+  <text
+    x="70" y="72"
+    font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+    font-size="48"
+    font-weight="500"
+    letter-spacing="-2"
+    fill="#1C1917"
+  >Reclaim</text>
+</svg>

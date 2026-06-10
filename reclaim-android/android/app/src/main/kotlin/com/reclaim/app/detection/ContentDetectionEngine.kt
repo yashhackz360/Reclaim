@@ -1,4 +1,4 @@
-package com.focuslock.app.detection
+﻿package com.reclaim.app.detection
 
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
@@ -35,7 +35,7 @@ class ContentDetectionEngine {
         UNKNOWN,
     }
 
-    // ── Package → block target mapping ─────────────────────────────────────────
+    // â”€â”€ Package â†’ block target mapping â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private val FULL_APP_BLOCKS = setOf(
         "com.zhiliaoapp.musically",     // TikTok
         "com.ss.android.ugc.trill",     // TikTok (alt)
@@ -69,7 +69,7 @@ class ContentDetectionEngine {
         }
     }
 
-    // ── YouTube Analysis ───────────────────────────────────────────────────────
+    // â”€â”€ YouTube Analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private fun analyzeYouTube(pkg: String, root: AccessibilityNodeInfo, event: AccessibilityEvent): ContentDetection? {
         // Check if we're in the Shorts player
         val isShortsPlayer = root.findAccessibilityNodeInfosByText("Shorts").isNotEmpty() ||
@@ -86,7 +86,7 @@ class ContentDetectionEngine {
         }
     }
 
-    // ── Instagram Analysis ─────────────────────────────────────────────────────
+    // â”€â”€ Instagram Analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private fun analyzeInstagram(pkg: String, root: AccessibilityNodeInfo, event: AccessibilityEvent): ContentDetection? {
         val isReelsPlayer = root.findAccessibilityNodeInfosByViewId("com.instagram.android:id/clips_viewer_view_pager").isNotEmpty()
         val isReelsTab    = root.findAccessibilityNodeInfosByViewId("com.instagram.android:id/clips_tab").isNotEmpty() &&
@@ -99,22 +99,23 @@ class ContentDetectionEngine {
         }
     }
 
-    // ── Facebook Analysis ──────────────────────────────────────────────────────
+    // â”€â”€ Facebook Analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private fun analyzeFacebook(pkg: String, root: AccessibilityNodeInfo, event: AccessibilityEvent): ContentDetection? {
         val isReels = root.findAccessibilityNodeInfosByViewId("com.facebook.katana:id/reels_video_player").isNotEmpty() ||
             root.findAccessibilityNodeInfosByText("Reels").isNotEmpty()
         return if (isReels) ContentDetection(pkg, ContentType.FACEBOOK_REELS, "Facebook Reels", 0.85f) else null
     }
 
-    // ── Twitter Analysis ───────────────────────────────────────────────────────
+    // â”€â”€ Twitter Analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private fun analyzeTwitter(pkg: String, root: AccessibilityNodeInfo, event: AccessibilityEvent): ContentDetection? {
         val hasVideo = root.findAccessibilityNodeInfosByViewId("com.twitter.android:id/video_player").isNotEmpty()
         return if (hasVideo) ContentDetection(pkg, ContentType.TWITTER_VIDEO_FEED, "X/Twitter Video", 0.75f) else null
     }
 
-    // ── Reddit Analysis ────────────────────────────────────────────────────────
+    // â”€â”€ Reddit Analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     private fun analyzeReddit(pkg: String, root: AccessibilityNodeInfo, event: AccessibilityEvent): ContentDetection? {
         val hasVideo = root.findAccessibilityNodeInfosByViewId("com.reddit.frontpage:id/video_player").isNotEmpty()
         return if (hasVideo) ContentDetection(pkg, ContentType.REDDIT_VIDEO_FEED, "Reddit Video", 0.7f) else null
     }
 }
+

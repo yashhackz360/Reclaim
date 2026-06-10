@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reclaim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #FCFBF9;
+      --bg2:       #FFFFFF;
+      --text:      #1C1917;
+      --text2:     #57534E;
+      --text3:     #A8A29E;
+      --amber:     #D97706;
+      --amber-l:   #FEF3C7;
+      --border:    rgba(28,25,23,0.08);
+      --border2:   rgba(28,25,23,0.15);
+      --radius:    12px;
+      --shadow:    0 4px 20px rgba(28,25,23,0.04);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Title Bar ── */
+    .titlebar {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+      gap: 10px;
+      -webkit-app-region: drag;
+      flex-shrink: 0;
+    }
+    .titlebar-icon { font-size: 18px; }
+    .titlebar h1   { font-size: 15px; font-weight: 600; letter-spacing: -0.02em; }
+    .titlebar-tag  {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--amber);
+      background: var(--amber-l);
+      padding: 2px 8px;
+      border-radius: 20px;
+      -webkit-app-region: no-drag;
+    }
+
+    /* ── Content ── */
+    .content { flex: 1; overflow-y: auto; padding: 28px 32px; }
+
+    /* ── Status Banner ── */
+    .banner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow);
+    }
+    .banner-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+      flex-shrink: 0;
+    }
+    .banner-dot.paused { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.2); }
+    .banner-dot.no-admin { background: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.2); }
+    .banner-text h2   { font-size: 15px; font-weight: 600; }
+    .banner-text p    { font-size: 13px; color: var(--text2); margin-top: 2px; }
+
+    /* ── Section ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 12px;
+    }
+
+    /* ── Platform Cards ── */
+    .platforms { display: flex; flex-direction: column; gap: 8px; margin-bottom: 32px; }
+    .platform-card {
+      display: flex;
+      align-items: center;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .platform-card:hover { border-color: var(--border2); box-shadow: var(--shadow); }
+    .platform-card.active { border-color: rgba(217,119,6,0.3); }
+    .platform-emoji { font-size: 22px; width: 32px; text-align: center; margin-right: 14px; }
+    .platform-info  { flex: 1; }
+    .platform-name  { font-size: 14px; font-weight: 500; }
+    .platform-desc  { font-size: 12px; color: var(--text3); margin-top: 2px; }
+    .platform-status { font-size: 11px; font-weight: 500; color: var(--amber); display: none; }
+    .platform-card.active .platform-status { display: block; }
+
+    /* Toggle */
+    .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0;
+      background: var(--border2);
+      border-radius: 22px;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .toggle-thumb {
+      position: absolute;
+      width: 16px; height: 16px;
+      background: white;
+      border-radius: 50%;
+      top: 3px; left: 3px;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .toggle input:checked ~ .toggle-track { background: var(--amber); }
+    .toggle input:checked ~ .toggle-thumb { transform: translateX(18px); }
+
+    /* ── Info box ── */
+    .info-box {
+      background: var(--amber-l);
+      border: 1px solid rgba(217,119,6,0.2);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-size: 13px;
+      color: #92400e;
+      line-height: 1.5;
+    }
+    .info-box strong { font-weight: 600; display: block; margin-bottom: 4px; }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 16px 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg2);
+      flex-shrink: 0;
+    }
+    .footer-text { font-size: 12px; color: var(--text3); }
+    .btn {
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--border2);
+      background: var(--bg);
+      color: var(--text);
+      transition: background 0.15s;
+    }
+    .btn:hover { background: var(--border); }
+  </style>
+</head>
+<body>
+  <div class="titlebar">
+    <span class="titlebar-icon">☀️</span>
+    <h1>Reclaim</h1>
+    <span class="titlebar-tag" id="tagLabel">Active</span>
+  </div>
+
+  <div class="content">
+    <!-- Status Banner -->
+    <div class="banner">
+      <div class="banner-dot" id="statusDot"></div>
+      <div class="banner-text">
+        <h2 id="statusTitle">Protection active</h2>
+        <p id="statusDesc">Blocking short-form content at the system level.</p>
+      </div>
+    </div>
+
+    <!-- Platforms -->
+    <div class="section-title">Platform Protection</div>
+    <div class="platforms" id="platformList"></div>
+
+    <!-- Info -->
+    <div class="info-box" id="adminWarning" style="display:none">
+      <strong>⚠️ Administrator access needed</strong>
+      Reclaim needs to run as Administrator to write to the Windows hosts file.
+      Right-click the installer and choose "Run as administrator", then restart.
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-text">Reclaim v1.0.0 — MIT License</span>
+    <button class="btn" id="btnGithub">View on GitHub ↗</button>
+  </div>
+
+  <script>
+    const PLATFORMS = {
+      tiktok:           { emoji: '🎵', name: 'TikTok', desc: 'Blocks the entire TikTok domain' },
+      twitter_videos:   { emoji: '✖️',  name: 'X / Twitter', desc: 'Blocks twitter.com and x.com' },
+      reddit_shortfeed: { emoji: '🤖', name: 'Reddit', desc: 'Blocks reddit.com short-form feed' },
+    };
+
+    let storeData = null;
+
+    async function init() {
+      storeData = await window.reclaim.getStore();
+      const hostsStatus = await window.reclaim.getHostsStatus();
+
+      // Status banner
+      const dot   = document.getElementById('statusDot');
+      const title = document.getElementById('statusTitle');
+      const desc  = document.getElementById('statusDesc');
+      const tag   = document.getElementById('tagLabel');
+      const warn  = document.getElementById('adminWarning');
+
+      if (hostsStatus === 'no-admin') {
+        dot.className = 'banner-dot no-admin';
+        title.textContent = 'Administrator access needed';
+        desc.textContent  = 'Restart Reclaim as Administrator to enable hosts-file blocking.';
+        tag.textContent = '⚠ No Admin';
+        warn.style.display = 'block';
+      } else if (hostsStatus === 'active') {
+        const active = Object.values(storeData.rules).filter(r => r.enabled).length;
+        title.textContent = `${active} platform${active !== 1 ? 's' : ''} blocked`;
+        desc.textContent  = 'System-level blocking active via hosts file.';
+        tag.textContent = 'Active';
+      } else {
+        dot.className = 'banner-dot paused';
+        title.textContent = 'No platforms blocked';
+        desc.textContent  = 'Enable platforms below to start protecting your focus.';
+        tag.textContent = 'Inactive';
+      }
+
+      renderPlatforms();
+    }
+
+    function renderPlatforms() {
+      const list = document.getElementById('platformList');
+      list.innerHTML = '';
+      for (const [key, meta] of Object.entries(PLATFORMS)) {
+        const rule = storeData.rules[key];
+        if (!rule) continue;
+        const card = document.createElement('div');
+        card.className = `platform-card ${rule.enabled ? 'active' : ''}`;
+        card.innerHTML = `
+          <span class="platform-emoji">${meta.emoji}</span>
+          <div class="platform-info">
+            <div class="platform-name">${meta.name}</div>
+            <div class="platform-desc">${meta.desc}</div>
+            <div class="platform-status">Blocking active</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" ${rule.enabled ? 'checked' : ''}>
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        `;
+        card.querySelector('input').addEventListener('change', async () => {
+          storeData = await window.reclaim.toggleRule(key);
+          renderPlatforms();
+        });
+        list.appendChild(card);
+      }
+    }
+
+    document.getElementById('btnGithub').addEventListener('click', () => {
+      // Open in default browser via shell - available in preload
+    });
+
+    init();
+  </script>
+</body>
+</html>

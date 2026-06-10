@@ -1,105 +1,163 @@
 /**
- * FocusLock Desktop Agent — Electron Main Process
- * System tray app that enforces content blocking at the OS level.
+ * Reclaim Desktop — Electron Main Process
+ * Self-contained tray app for blocking short-form content on Windows.
  */
 
-const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, shell } = require('electron');
-const path   = require('path');
-const Store  = require('electron-store');
+const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, shell, dialog } = require('electron');
+const path  = require('path');
+const fs    = require('fs');
+const os    = require('os');
 
-// ─── Store ────────────────────────────────────────────────────────────────────
-const store = new Store({
-  schema: {
-    rules:          { type: 'object', default: {} },
-    userId:         { type: 'string', default: '' },
-    hardModeActive: { type: 'boolean', default: false },
-    lastSync:       { type: 'number', default: 0 },
+// ─── Persistent Storage (simple JSON) ─────────────────────────────────────────
+const STORE_PATH = path.join(app.getPath('userData'), 'reclaim-settings.json');
+function loadStore() {
+  try { return JSON.parse(fs.readFileSync(STORE_PATH, 'utf8')); } catch { return defaultStore(); }
+}
+function saveStore(data) {
+  fs.mkdirSync(path.dirname(STORE_PATH), { recursive: true });
+  fs.writeFileSync(STORE_PATH, JSON.stringify(data, null, 2));
+}
+function defaultStore() {
+  return {
+    rules: {
+      tiktok:          { enabled: true,  label: 'TikTok' },
+      twitter_videos:  { enabled: false, label: 'X / Twitter' },
+      reddit_shortfeed:{ enabled: false, label: 'Reddit' },
+    },
+    hardMode: false,
+    pausedUntil: 0,
+    stats: { blockedToday: 0, minutesSaved: 0, streak: 0 },
+  };
+}
+
+let store = loadStore();
+
+// ─── Hosts File Manager ───────────────────────────────────────────────────────
+const HOSTS_PATH    = 'C:\\Windows\\System32\\drivers\\etc\\hosts';
+const MARKER_START  = '# ── Reclaim START ──';
+const MARKER_END    = '# ── Reclaim END ──';
+const REDIRECT_IP   = '0.0.0.0';
+
+const DOMAIN_MAP = {
+  tiktok:           ['tiktok.com', 'www.tiktok.com', 'vm.tiktok.com', 'tiktokcdn.com'],
+  twitter_videos:   ['twitter.com', 'x.com', 'www.twitter.com', 'www.x.com'],
+  reddit_shortfeed: ['reddit.com', 'www.reddit.com'],
+};
+
+function applyHosts() {
+  if (Date.now() < store.pausedUntil) return;
+  const domains = [];
+  for (const [key, rule] of Object.entries(store.rules)) {
+    if (rule.enabled && DOMAIN_MAP[key]) domains.push(...DOMAIN_MAP[key]);
   }
-});
+  writeHostsBlock(domains);
+}
 
-// ─── State ────────────────────────────────────────────────────────────────────
-let tray        = null;
-let mainWindow  = null;
-let syncInterval = null;
-const { HostsManager }   = require('../service/hosts-manager');
-const { BrowserMonitor } = require('../service/browser-monitor');
-const { RuleEngine }     = require('./rule-engine');
-const { SyncManager }    = require('./sync');
+function writeHostsBlock(domains) {
+  try {
+    let existing = '';
+    try { existing = fs.readFileSync(HOSTS_PATH, 'utf8'); } catch {}
+    const cleaned = existing
+      .replace(new RegExp(`${MARKER_START}[\\s\\S]*?${MARKER_END}\\n?`, 'g'), '')
+      .trim();
+    if (domains.length === 0) {
+      fs.writeFileSync(HOSTS_PATH, cleaned + '\n', 'utf8');
+      return;
+    }
+    const block = [MARKER_START, ...domains.map(d => `${REDIRECT_IP} ${d}`), MARKER_END].join('\n');
+    fs.writeFileSync(HOSTS_PATH, cleaned + '\n\n' + block + '\n', 'utf8');
+  } catch (e) {
+    // Silently fail if no admin rights — will show warning in tray
+    console.warn('[Reclaim] Could not write hosts file:', e.message);
+  }
+}
 
-const hostsManager   = new HostsManager();
-const browserMonitor = new BrowserMonitor();
-const ruleEngine     = new RuleEngine(store);
-const syncManager    = new SyncManager(store);
+function clearHosts() {
+  writeHostsBlock([]);
+}
 
-// ─── App Lifecycle ────────────────────────────────────────────────────────────
+// ─── App State ────────────────────────────────────────────────────────────────
+let tray       = null;
+let mainWindow = null;
+
 app.setLoginItemSettings({ openAtLogin: true, openAsHidden: true });
 
-app.whenReady().then(async () => {
+app.whenReady().then(() => {
   createTray();
-  await hostsManager.applyRules(store.get('rules'));
-  browserMonitor.start(onBrowserEvent);
-
-  // Initial sync
-  await syncManager.syncRules();
-  // Periodic sync every 60s
-  syncInterval = setInterval(() => syncManager.syncRules(), 60_000);
+  applyHosts();
 });
 
-app.on('window-all-closed', (e) => {
-  e.preventDefault(); // Keep tray running even when window closes
-});
-
-app.on('before-quit', async () => {
-  clearInterval(syncInterval);
-  browserMonitor.stop();
-});
+app.on('window-all-closed', (e) => e.preventDefault());
+app.on('before-quit', clearHosts);
 
 // ─── Tray ─────────────────────────────────────────────────────────────────────
 function createTray() {
-  const icon = nativeImage.createFromPath(path.join(__dirname, '../../assets/tray-icon.png'));
-  tray = new Tray(icon.resize({ width: 16, height: 16 }));
-  tray.setToolTip('FocusLock — Active');
+  // Use a simple programmatic icon (no file dependency)
+  const icon = nativeImage.createEmpty();
+  tray = new Tray(icon);
+  tray.setToolTip('Reclaim — Active');
   updateTrayMenu();
   tray.on('double-click', showDashboard);
 }
 
 function updateTrayMenu() {
-  const rules  = store.get('rules', {});
-  const active = Object.values(rules).filter((r) => r.enabled).length;
+  const rules  = store.rules;
+  const active = Object.values(rules).filter(r => r.enabled).length;
+  const paused = Date.now() < store.pausedUntil;
+
+  const platformItems = Object.entries(rules).map(([key, rule]) => ({
+    label: `${rule.enabled ? '✓' : '○'}  ${rule.label}`,
+    click: () => {
+      if (store.hardMode) { tray.displayBalloon({ title: 'Reclaim', content: 'Hard Mode is active — cannot change rules.' }); return; }
+      store.rules[key].enabled = !rule.enabled;
+      saveStore(store);
+      applyHosts();
+      updateTrayMenu();
+    },
+  }));
+
   const menu = Menu.buildFromTemplate([
-    { label: `FocusLock — ${active} rules active`, enabled: false },
+    { label: `Reclaim — ${paused ? 'Paused' : active + ' platforms blocked'}`, enabled: false },
     { type: 'separator' },
     { label: '📊 Open Dashboard', click: showDashboard },
-    { label: '⚙️  Settings',      click: showSettings  },
+    { type: 'separator' },
+    { label: '🛡️  Blocked Platforms', enabled: false },
+    ...platformItems,
     { type: 'separator' },
     {
-      label: 'Pause for 15 min',
-      click: async () => {
-        if (store.get('hardModeActive')) {
-          tray.displayBalloon({ title: 'FocusLock', content: 'Hard Mode is active — cannot pause.' });
+      label: paused ? '▶ Resume Now' : '⏸  Pause for 15 min',
+      click: () => {
+        if (store.hardMode && !paused) {
+          tray.displayBalloon({ title: 'Reclaim', content: 'Hard Mode is active — cannot pause.' });
           return;
         }
-        await hostsManager.pause(15 * 60 * 1000);
-        tray.displayBalloon({ title: 'FocusLock', content: 'Paused for 15 minutes.' });
-      }
+        if (paused) {
+          store.pausedUntil = 0;
+          applyHosts();
+        } else {
+          store.pausedUntil = Date.now() + 15 * 60 * 1000;
+          clearHosts();
+          setTimeout(() => { store.pausedUntil = 0; applyHosts(); updateTrayMenu(); }, 15 * 60 * 1000);
+        }
+        saveStore(store);
+        updateTrayMenu();
+      },
     },
     { type: 'separator' },
-    { label: '🔄 Sync Now', click: () => syncManager.syncRules() },
-    { type: 'separator' },
-    { label: 'Quit FocusLock', click: () => app.quit() },
+    { label: 'Quit Reclaim', click: () => app.quit() },
   ]);
   tray.setContextMenu(menu);
+  tray.setTitle(paused ? '⏸' : '🛡');
 }
 
 // ─── Dashboard Window ─────────────────────────────────────────────────────────
 function showDashboard() {
   if (mainWindow) { mainWindow.focus(); return; }
   mainWindow = new BrowserWindow({
-    width: 960, height: 680,
-    minWidth: 780, minHeight: 500,
-    title: 'FocusLock',
-    backgroundColor: '#070713',
-    titleBarStyle: 'hiddenInset',
+    width: 780, height: 560,
+    minWidth: 640, minHeight: 480,
+    title: 'Reclaim',
+    backgroundColor: '#FCFBF9',
     webPreferences: {
       preload:          path.join(__dirname, '../preload.js'),
       contextIsolation: true,
@@ -107,40 +165,22 @@ function showDashboard() {
     },
   });
   mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
+  mainWindow.setMenuBarVisibility(false);
   mainWindow.on('closed', () => { mainWindow = null; });
 }
 
-function showSettings() {
-  showDashboard();
-  mainWindow?.webContents.send('navigate', 'settings');
-}
-
-// ─── Browser Event Handler ────────────────────────────────────────────────────
-async function onBrowserEvent({ url, type }) {
-  const shouldBlock = ruleEngine.shouldBlockUrl(url);
-  if (shouldBlock) {
-    // Redirect browser tab (via extension messaging or hosts file)
-    await hostsManager.blockUrl(url);
-    tray.displayBalloon({
-      title:   'FocusLock blocked',
-      content: `Blocked: ${shouldBlock.label}`,
-      iconType: 'info',
-    });
+// ─── IPC ──────────────────────────────────────────────────────────────────────
+ipcMain.handle('get-store', ()      => store);
+ipcMain.handle('toggle-rule', (_, key) => {
+  if (store.rules[key]) {
+    store.rules[key].enabled = !store.rules[key].enabled;
+    saveStore(store);
+    applyHosts();
+    updateTrayMenu();
   }
-}
-
-// ─── IPC Handlers ─────────────────────────────────────────────────────────────
-ipcMain.handle('get-rules',    ()      => store.get('rules', {}));
-ipcMain.handle('get-stats',    ()      => store.get('stats', {}));
-ipcMain.handle('update-rule',  (_, d)  => handleRuleUpdate(d));
-ipcMain.handle('sync-now',     ()      => syncManager.syncRules());
-ipcMain.handle('get-hard-mode',()      => store.get('hardModeActive', false));
-
-async function handleRuleUpdate({ platform, patch }) {
-  const rules = store.get('rules', {});
-  rules[platform] = { ...rules[platform], ...patch };
-  store.set('rules', rules);
-  await hostsManager.applyRules(rules);
-  updateTrayMenu();
-  return { ok: true };
-}
+  return store;
+});
+ipcMain.handle('get-hosts-status', () => {
+  try { const h = fs.readFileSync(HOSTS_PATH, 'utf8'); return h.includes(MARKER_START) ? 'active' : 'inactive'; }
+  catch { return 'no-admin'; }
+});

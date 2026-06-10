@@ -1,4 +1,4 @@
-package com.focuslock.app.services
+﻿package com.reclaim.app.services
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
@@ -7,7 +7,7 @@ import android.view.accessibility.AccessibilityEvent
 
 /**
  * Reclaim Accessibility Service
- * Stub implementation — full detection engine coming in v1.0.
+ * Stub implementation â€” full detection engine coming in v1.0.
  */
 class FocusLockAccessibilityService : AccessibilityService() {
 
@@ -53,3 +53,4 @@ class FocusLockAccessibilityService : AccessibilityService() {
         Log.i(TAG, "Reclaim Accessibility Service destroyed")
     }
 }
+
