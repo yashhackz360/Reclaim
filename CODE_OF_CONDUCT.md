@@ -1,23 +1,27 @@
-# Contributor Covenant Code of Conduct
+# How We Treat Each Other
 
-## Our Pledge
+We are a group of developers, students, and humans who are fighting back against algorithmic addiction. We are here to build tools that protect our time and mental health.
 
-We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
+Because of why this project exists, our community is built on empathy, respect, and zero tolerance for toxic behavior.
 
-We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
+## The Baseline
 
-## Our Standards
+* **Be kind.** We're all here to build something good for humanity. Act like it.
+* **Respect the mission.** We don't build workarounds, backdoors, or features that compromise the goal of reducing screen time.
+* **Help each other.** If someone is struggling with the codebase, guide them. If someone is struggling with focus, support them.
+* **No toxicity.** No gatekeeping, no harassment, no insults, no discriminatory language. Period.
 
-Examples of behavior that contributes to a positive environment for our community include:
-* Demonstrating empathy and kindness toward other people
-* Being respectful of differing opinions, viewpoints, and experiences
-* Giving and gracefully accepting constructive feedback
-* Accepting responsibility and apologizing to those affected by our mistakes, and learning from the experience
-* Focusing on what is best not just for us as individuals, but for the overall community
+## Unacceptable Behavior
 
-Examples of unacceptable behavior include:
-* The use of sexualized language or imagery, and sexual attention or advances of any kind
-* Trolling, insulting or derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or email address, without their explicit permission
-* Other conduct which could reasonably be considered inappropriate in a professional setting
+If you bring ego, harassment, or toxic behavior into this space, you will be removed. We don't have time for drama; we're trying to get our time back.
+
+* Do not insult or attack other contributors.
+* Do not use exclusionary or discriminatory language.
+* Do not spam or troll the issues or PRs.
+* Do not publish others' private information.
+
+## Enforcement
+
+If you see something that breaks these rules, reach out to the maintainers. We will take it seriously and take action immediately. 
+
+This is a safe space to build tools for mental clarity. Let's keep it that way.

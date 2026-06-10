@@ -1,32 +1,39 @@
 # Contributing to Reclaim
 
-First off, thank you for considering contributing to Reclaim! It's people like you that make Reclaim such a great tool for reclaiming focus and attention.
+Hey! Thank you for wanting to help build Reclaim. 
 
-## Code of Conduct
+I started this project as an engineering student because I realized how much of my life was being stolen by short-form content. If you're here, you probably feel the same way. 
 
-By participating in this project, you are expected to uphold our [Code of Conduct](./CODE_OF_CONDUCT.md).
+We are fighting against platforms with thousands of engineers dedicated to keeping users hooked. The only way we win is by building together.
 
-## How Can I Contribute?
+## How You Can Help
 
-### Reporting Bugs
-- Ensure the bug was not already reported by searching on GitHub under [Issues](https://github.com/yashhackz360/Reclaim/issues).
-- If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/yashhackz360/Reclaim/issues/new). Be sure to include a title and clear description, as much relevant information as possible, and a code sample or an executable test case demonstrating the expected behavior that is not occurring.
+You don't need to be a senior architect to contribute to this cause. 
 
-### Suggesting Enhancements
-- Open a new issue with the `enhancement` label.
-- Provide a clear and detailed explanation of the feature you want and why it's important.
+### 1. Fix a Broken Selector (The most common issue!)
+Platforms like YouTube and TikTok constantly change their DOM to bypass blockers. If you notice a Shorts feed slipping through, find the new CSS selector and submit a PR to update the extension. This is the frontline of the project.
 
-### Pull Requests
-1. Fork the repo and create your branch from `main`.
-2. If you've added code that should be tested, add tests.
-3. If you've changed APIs, update the documentation.
-4. Ensure the test suite passes.
-5. Issue that pull request!
+### 2. Squashing Bugs
+Found a bug? 
+- Check the [Issues](https://github.com/yashhackz360/Reclaim/issues) to see if someone else already reported it.
+- If not, open an issue. Provide screenshots, console logs, and steps to reproduce.
+- Better yet, open a PR with the fix!
 
-## Project Structure
-Reclaim is a monorepo. Please ensure you are working in the correct directory:
-- `focuslock-web/`: Marketing website
-- `focuslock-extension/`: Browser extension
-- `focuslock-android/`: Android app
-- `focuslock-desktop/`: Windows Agent
-- `focuslock-backend/`: Firebase backend
+### 3. Adding Features
+If you have an idea that helps users reclaim their focus, let's hear it. Open a `Feature Request` issue first so we can discuss how it fits into the ecosystem before you spend hours coding it. We want to keep the tool ruthlessly focused on its core mission.
+
+## The Stack
+Reclaim is a monorepo. Jump into whatever layer you're most comfortable with:
+- `focuslock-web/`: The marketing site (Next.js, React)
+- `focuslock-extension/`: Browser extension (Manifest V3, Vanilla JS)
+- `focuslock-android/`: Android app (Flutter + Kotlin)
+- `focuslock-desktop/`: Windows Agent (Electron + Node)
+- `focuslock-backend/`: The backend (Firebase)
+
+## PR Guidelines
+1. Fork the repo and branch off `main`.
+2. Keep it simple and readable.
+3. Test your code. Don't accidentally break the blocking engine!
+4. Submit the PR and give us a bit of context on what you fixed.
+
+Let's take our time back.
