@@ -481,13 +481,34 @@ function FAQ() {
 }
 
 /* ─── Download ──────────────────────────────────────────────────────────── */
+function IconDownload() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+}
+
+function IconCode() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 18 22 12 16 6" />
+      <polyline points="8 6 2 12 8 18" />
+    </svg>
+  );
+}
+
 function Download() {
   const r = useReveal();
   const cards = [
-    { platform: "Android",           tech: "Flutter · Kotlin",     label: "View Source",    soon: false, href: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-android" },
-    { platform: "Chrome / Edge",      tech: "Manifest V3",          label: "View Source",    soon: false, href: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-extension" },
-    { platform: "Windows",            tech: "Electron · Node",      label: "View Source",    soon: false, href: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-desktop" },
+    { platform: "Android",           tech: "Flutter · Kotlin",     source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-android" },
+    { platform: "Chrome / Edge",      tech: "Manifest V3",          source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-extension" },
+    { platform: "Windows",            tech: "Electron · Node",      source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-desktop" },
   ];
+  const downloadUrl = "https://github.com/yashhackz360/Reclaim/archive/refs/tags/v0.1.0-alpha.zip";
+
   return (
     <section className="section" id="choose-freedom">
       <div className="wrap">
@@ -498,23 +519,29 @@ function Download() {
             Install the open-source tools across your devices. No account required to start creating space.
           </p>
           <div className="download-grid">
-            {cards.map(c => {
-              const Tag = c.soon ? "div" : "a";
-              return (
-                <Tag 
-                  href={c.soon ? undefined : c.href} 
-                  className={`dl-card${c.soon ? " soon" : ""}`} 
-                  key={c.platform}
-                  target={c.soon ? undefined : "_blank"}
-                  rel={c.soon ? undefined : "noopener noreferrer"}
-                  {...(c.soon ? { 'aria-disabled': true } : {})}
-                >
-                  <h3 className="dl-platform">{c.platform}</h3>
-                  <p className="dl-tech">{c.tech}</p>
-                  <span className="dl-btn-label">{c.label}</span>
-                </Tag>
-              );
-            })}
+            {cards.map(c => (
+              <div className="dl-card" key={c.platform}>
+                <h3 className="dl-platform">{c.platform}</h3>
+                <p className="dl-tech">{c.tech}</p>
+                <div className="dl-actions">
+                  <a
+                    href={downloadUrl}
+                    className="dl-btn-label dl-btn-primary"
+                    download
+                  >
+                    <IconDownload /> Download
+                  </a>
+                  <a
+                    href={c.source}
+                    className="dl-btn-label dl-btn-secondary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <IconCode /> View Source
+                  </a>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
