@@ -1,0 +1,83 @@
+name: Build and Release Binaries
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      - name: Install dependencies
+        working-directory: reclaim-android
+        run: flutter pub get
+      - name: Build APK
+        working-directory: reclaim-android
+        run: flutter build apk --release
+      - name: Rename APK
+        working-directory: reclaim-android
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/reclaim-android.apk
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reclaim-android
+          path: reclaim-android/build/app/outputs/flutter-apk/reclaim-android.apk
+
+  build-desktop:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        working-directory: reclaim-desktop
+        run: npm install
+      - name: Build Executable
+        working-directory: reclaim-desktop
+        run: npm run build:nsis
+      - name: Upload EXE Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reclaim-desktop
+          path: reclaim-desktop/dist/Reclaim Setup*.exe
+
+  build-extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Zip Extension
+        working-directory: reclaim-extension
+        run: zip -r ../reclaim-extension.zip .
+      - name: Upload Zip Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: reclaim-extension
+          path: reclaim-extension.zip
+
+  release:
+    needs: [build-android, build-desktop, build-extension]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Release to GitHub
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: release-assets/*

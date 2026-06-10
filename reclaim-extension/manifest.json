@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "FocusLock — Block Shorts & Reels",
-  "short_name": "FocusLock",
+  "name": "Reclaim — Block Shorts & Reels",
+  "short_name": "Reclaim",
   "version": "1.0.0",
   "description": "Eliminate YouTube Shorts, Instagram Reels, TikTok, and addictive short-form content. Reclaim your focus and build lasting habits.",
   "icons": {
