@@ -500,6 +500,15 @@ nav.scrolled {
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
+.dl-card-soon {
+  opacity: 0.6;
+  border-style: dashed;
+  pointer-events: none;
+}
+.dl-card-soon:hover {
+  transform: none;
+  box-shadow: none;
+}
 .dl-platform { font-size: var(--text-lg); margin-bottom: var(--space-1); color: var(--text-primary); }
 .dl-tech { font-size: var(--text-xs); color: var(--text-tertiary); margin-bottom: var(--space-6); }
 .dl-actions {

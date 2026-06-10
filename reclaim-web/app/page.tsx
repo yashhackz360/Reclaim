@@ -503,28 +503,38 @@ function IconCode() {
 
 function Download() {
   const r = useReveal();
-  const releaseBase = "https://github.com/yashhackz360/Reclaim/releases/download/v0.2.0-alpha";
+  // v0.2.6-alpha has desktop EXE + extension ZIP. Android parked for v0.3.
+  const releaseBase = "https://github.com/yashhackz360/Reclaim/releases/download/v0.2.6-alpha";
   const cards = [
     {
-      platform: "Android",
-      tech: "Flutter · Kotlin",
-      source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-android",
-      downloadUrl: `${releaseBase}/reclaim-android.apk`,
-      downloadLabel: "Download APK",
-    },
-    {
       platform: "Chrome / Edge",
-      tech: "Manifest V3",
+      tech: "Manifest V3 · Vanilla JS",
+      icon: "🌐",
       source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-extension",
       downloadUrl: `${releaseBase}/reclaim-extension.zip`,
       downloadLabel: "Download ZIP",
+      comingSoon: false,
+      instructions: "Unzip → chrome://extensions → Load unpacked → select the folder",
     },
     {
       platform: "Windows",
-      tech: "Electron · Node",
+      tech: "Electron · Node.js",
+      icon: "🖥️",
       source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-desktop",
-      downloadUrl: `${releaseBase}/Reclaim.Setup.1.0.0.exe`,
+      downloadUrl: `${releaseBase}/reclaim-desktop.zip`,
       downloadLabel: "Download EXE",
+      comingSoon: false,
+      instructions: "Run setup as Administrator to enable system-level blocking",
+    },
+    {
+      platform: "Android",
+      tech: "Flutter · Kotlin",
+      icon: "📱",
+      source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-android",
+      downloadUrl: null,
+      downloadLabel: null,
+      comingSoon: true,
+      instructions: "Full native app with Accessibility Service — shipping in v0.3",
     },
   ];
 
@@ -535,21 +545,41 @@ function Download() {
           <span className="sh-tag">Begin</span>
           <h2>Choose your time</h2>
           <p style={{ fontSize: "var(--text-lg)", color: "var(--text-secondary)", maxWidth: "500px", margin: "0 auto var(--space-4)" }}>
-            Install the open-source tools across your devices. No account required to start creating space.
+            Open-source tools across your devices. No account, no tracking — just focus.
           </p>
           <div className="download-grid">
             {cards.map(c => (
-              <div className="dl-card" key={c.platform}>
-                <h3 className="dl-platform">{c.platform}</h3>
+              <div className={`dl-card${c.comingSoon ? " dl-card-soon" : ""}`} key={c.platform}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+                  <span style={{ fontSize: "22px" }}>{c.icon}</span>
+                  <h3 className="dl-platform" style={{ margin: 0 }}>{c.platform}</h3>
+                  {c.comingSoon && (
+                    <span style={{
+                      marginLeft: "auto", fontSize: "10px", fontWeight: 600,
+                      letterSpacing: "0.06em", textTransform: "uppercase",
+                      background: "var(--amber-l, #FEF3C7)", color: "var(--amber, #D97706)",
+                      padding: "2px 8px", borderRadius: "20px", border: "1px solid rgba(217,119,6,0.2)"
+                    }}>v0.3</span>
+                  )}
+                </div>
                 <p className="dl-tech">{c.tech}</p>
+                <p style={{ fontSize: "12px", color: "var(--text-secondary)", marginBottom: "14px", lineHeight: 1.5 }}>
+                  {c.instructions}
+                </p>
                 <div className="dl-actions">
-                  <a
-                    href={c.downloadUrl}
-                    className="dl-btn-label dl-btn-primary"
-                    download
-                  >
-                    <IconDownload /> {c.downloadLabel}
-                  </a>
+                  {c.comingSoon ? (
+                    <span className="dl-btn-label dl-btn-primary" style={{ opacity: 0.4, cursor: "not-allowed", pointerEvents: "none" }}>
+                      Coming soon
+                    </span>
+                  ) : (
+                    <a
+                      href={c.downloadUrl!}
+                      className="dl-btn-label dl-btn-primary"
+                      download
+                    >
+                      <IconDownload /> {c.downloadLabel}
+                    </a>
+                  )}
                   <a
                     href={c.source}
                     className="dl-btn-label dl-btn-secondary"
@@ -567,6 +597,7 @@ function Download() {
     </section>
   );
 }
+
 
 /* ─── Footer ────────────────────────────────────────────────────────────── */
 function Footer() {
