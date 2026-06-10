@@ -537,7 +537,6 @@ function Download() {
     { platform: "Android",           tech: "Flutter · Kotlin",     label: "Download APK",    soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
     { platform: "Chrome / Edge",      tech: "Manifest V3",          label: "Add to Browser",  soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
     { platform: "Windows",            tech: "Electron · Node",      label: "Download .exe",   soon: false, href: "https://github.com/reclaim-app/reclaim/releases" },
-    { platform: "Firefox",            tech: "Manifest V3",          label: "Coming Soon",     soon: true,  href: "#" },
   ];
   return (
     <section className="section" id="download">
