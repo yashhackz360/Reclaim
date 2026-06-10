@@ -45,8 +45,7 @@
       "oneClick":            false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "include":             "installer/installer.nsh"
+      "createStartMenuShortcut": true
     },
     "extraResources": [
       { "from": "service/", "to": "service/", "filter": ["**/*"] }
