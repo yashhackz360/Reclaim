@@ -1,0 +1,121 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper Functions ──────────────────────────────────────────────────────
+    function isAuth()           { return request.auth != null; }
+    function isOwner(userId)    { return isAuth() && request.auth.uid == userId; }
+    function isValidTimestamp() { return request.time == request.resource.data.updatedAt; }
+
+    function isApprovedPartner(userId) {
+      return isAuth() && exists(
+        /databases/$(database)/documents/accountability_partners/$(request.auth.uid + '_' + userId)
+      ) && get(
+        /databases/$(database)/documents/accountability_partners/$(request.auth.uid + '_' + userId)
+      ).data.status == 'active';
+    }
+
+    function isPartnerOf(userId) {
+      return isAuth() && (
+        exists(/databases/$(database)/documents/accountability_partners/$(request.auth.uid + '_' + userId)) ||
+        exists(/databases/$(database)/documents/accountability_partners/$(userId + '_' + request.auth.uid))
+      );
+    }
+
+    // ── Users ─────────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      allow read:  if isOwner(userId) || isApprovedPartner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) &&
+        // Prevent client-side hardMode disabling — must go through Cloud Function
+        !(request.resource.data.hardModeEnabled == false &&
+          resource.data.hardModeEnabled == true);
+      allow delete: if false; // Users cannot delete their own account via client
+    }
+
+    // ── Devices ───────────────────────────────────────────────────────────────
+    match /devices/{deviceId} {
+      allow read:   if isOwner(resource.data.userId);
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update: if isOwner(resource.data.userId);
+      allow delete: if isOwner(resource.data.userId);
+    }
+
+    // ── Block Rules ───────────────────────────────────────────────────────────
+    match /block_rules/{ruleId} {
+      allow read:   if isOwner(resource.data.userId) || isApprovedPartner(resource.data.userId);
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update: if isOwner(resource.data.userId) &&
+        // Hard-locked rules cannot be changed client-side
+        resource.data.isHardLocked == false;
+      allow delete: if isOwner(resource.data.userId) && resource.data.isHardLocked == false;
+    }
+
+    // ── Focus Sessions ────────────────────────────────────────────────────────
+    match /focus_sessions/{sessionId} {
+      allow read:   if isOwner(resource.data.userId);
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update: if isOwner(resource.data.userId);
+      allow delete: if isOwner(resource.data.userId);
+    }
+
+    // ── Focus Rules (session overrides) ───────────────────────────────────────
+    match /focus_rules/{ruleId} {
+      allow read, write: if isAuth() && resource.data.userId == request.auth.uid;
+    }
+
+    // ── Accountability Partners ───────────────────────────────────────────────
+    match /accountability_partners/{partnershipId} {
+      allow read: if isAuth() && (
+        resource.data.requesterId == request.auth.uid ||
+        resource.data.partnerId   == request.auth.uid
+      );
+      allow create: if isAuth() &&
+        request.resource.data.requesterId == request.auth.uid &&
+        // Cannot partner with yourself
+        request.resource.data.partnerId != request.auth.uid;
+      allow update: if isAuth() && (
+        resource.data.requesterId == request.auth.uid ||
+        resource.data.partnerId   == request.auth.uid
+      );
+      allow delete: if isAuth() && resource.data.requesterId == request.auth.uid;
+    }
+
+    // ── Unlock Requests ───────────────────────────────────────────────────────
+    match /unlock_requests/{requestId} {
+      allow read: if isAuth() && (
+        resource.data.userId == request.auth.uid || isPartnerOf(resource.data.userId)
+      );
+      allow create: if isAuth() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuth() && (
+        // User can cancel their own request
+        (resource.data.userId == request.auth.uid && request.resource.data.status == 'cancelled') ||
+        // Partner can approve/reject — but cannot change the waitUntil timestamp
+        (isPartnerOf(resource.data.userId) &&
+         request.resource.data.waitUntil == resource.data.waitUntil)
+      );
+      allow delete: if false;
+    }
+
+    // ── Analytics ─────────────────────────────────────────────────────────────
+    match /analytics/{userId}/{collection}/{docId} {
+      allow read:  if isOwner(userId) || isApprovedPartner(userId);
+      allow write: if isOwner(userId);
+    }
+
+    // ── Streaks ───────────────────────────────────────────────────────────────
+    match /streaks/{userId} {
+      allow read:  if isOwner(userId) || isApprovedPartner(userId);
+      allow write: if isOwner(userId);
+    }
+
+    // ── Notifications ─────────────────────────────────────────────────────────
+    match /notifications/{notificationId} {
+      allow read:   if isOwner(resource.data.userId);
+      allow update: if isOwner(resource.data.userId) &&
+        // Only allow marking as read
+        request.resource.data.read == true;
+      allow create, delete: if false; // Only Cloud Functions create/delete notifications
+    }
+  }
+}

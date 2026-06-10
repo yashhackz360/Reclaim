@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FocusLock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple:   #6c47ff;
+      --purple-l: #a78bfa;
+      --surface:  #0f0a1e;
+      --card:     rgba(255,255,255,0.05);
+      --border:   rgba(108,71,255,0.25);
+      --text:     #f0eeff;
+      --muted:    rgba(240,238,255,0.5);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      width: 340px;
+      background: var(--surface);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .header {
+      padding: 18px 20px 14px;
+      background: linear-gradient(135deg, rgba(108,71,255,0.15), rgba(168,85,247,0.08));
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #6c47ff, #a855f7);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .header-text h1 { font-size: 16px; font-weight: 700; }
+    .header-text p  { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .status-badge {
+      margin-left: auto;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(74,222,128,0.15);
+      color: #4ade80;
+      border: 1px solid rgba(74,222,128,0.3);
+    }
+    .status-badge.paused {
+      background: rgba(251,191,36,0.15);
+      color: #fbbf24;
+      border-color: rgba(251,191,36,0.3);
+    }
+
+    /* ── Stats Row ── */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat {
+      padding: 14px 10px;
+      text-align: center;
+      background: var(--surface);
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--purple-l), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    /* ── Toggles ── */
+    .section-label {
+      padding: 14px 20px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .toggles { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 4px; }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--card);
+      border: 1px solid transparent;
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+    .toggle-row:hover { border-color: var(--border); }
+    .platform-icon { font-size: 18px; margin-right: 10px; }
+    .platform-name { flex: 1; font-size: 13px; font-weight: 500; }
+    .platform-count { font-size: 11px; color: var(--muted); margin-right: 10px; }
+
+    /* Toggle switch */
+    .switch { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      transition: 0.25s;
+      cursor: pointer;
+    }
+    .slider:before {
+      content: '';
+      position: absolute;
+      width: 14px; height: 14px;
+      left: 3px; top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.25s;
+    }
+    input:checked + .slider {
+      background: linear-gradient(135deg, #6c47ff, #a855f7);
+    }
+    input:checked + .slider:before { transform: translateX(16px); }
+
+    /* ── Footer Actions ── */
+    .actions {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .btn {
+      flex: 1;
+      padding: 9px 0;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary {
+      background: linear-gradient(135deg, #6c47ff, #a855f7);
+      color: white;
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    /* ── Streak ── */
+    .streak-bar {
+      margin: 0 12px 12px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, rgba(108,71,255,0.12), rgba(168,85,247,0.06));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .streak-flame { font-size: 24px; }
+    .streak-text { flex: 1; }
+    .streak-count { font-size: 15px; font-weight: 700; color: var(--purple-l); }
+    .streak-sub   { font-size: 11px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">🔒</div>
+    <div class="header-text">
+      <h1>FocusLock</h1>
+      <p>Distraction Elimination</p>
+    </div>
+    <span class="status-badge" id="statusBadge">Active</span>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value" id="statBlocked">–</div>
+      <div class="stat-label">Blocked Today</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="statMinutes">–</div>
+      <div class="stat-label">Min Saved</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="statStreak">–</div>
+      <div class="stat-label">Day Streak</div>
+    </div>
+  </div>
+
+  <!-- Section: Platforms -->
+  <div class="section-label">Blocked Platforms</div>
+  <div class="toggles" id="toggleList">
+    <!-- Rendered by JS -->
+  </div>
+
+  <!-- Streak bar -->
+  <div class="streak-bar" id="streakBar" style="display:none">
+    <span class="streak-flame">🔥</span>
+    <div class="streak-text">
+      <div class="streak-count" id="streakCount">0 day streak</div>
+      <div class="streak-sub">Keep going — you're building real habits</div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions">
+    <button class="btn btn-secondary" id="btnSettings">⚙ Settings</button>
+    <button class="btn btn-primary"   id="btnPause">Pause 15min</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

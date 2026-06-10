@@ -1,0 +1,65 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "block_rules",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId",        "order": "ASCENDING" },
+        { "fieldPath": "isHardLocked",  "order": "ASCENDING" },
+        { "fieldPath": "updatedAt",     "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "block_rules",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId",   "order": "ASCENDING" },
+        { "fieldPath": "platform", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "focus_sessions",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId",    "order": "ASCENDING" },
+        { "fieldPath": "status",    "order": "ASCENDING" },
+        { "fieldPath": "startTime", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "unlock_requests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId",    "order": "ASCENDING" },
+        { "fieldPath": "status",    "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "notifications",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId",    "order": "ASCENDING" },
+        { "fieldPath": "read",      "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "accountability_partners",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "requesterId", "order": "ASCENDING" },
+        { "fieldPath": "status",      "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "accountability_partners",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "partnerId", "order": "ASCENDING" },
+        { "fieldPath": "status",    "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}
