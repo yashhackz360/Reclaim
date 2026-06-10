@@ -502,12 +502,30 @@ function IconCode() {
 
 function Download() {
   const r = useReveal();
+  const releaseBase = "https://github.com/yashhackz360/Reclaim/releases/download/v0.2.0-alpha";
   const cards = [
-    { platform: "Android",           tech: "Flutter · Kotlin",     source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-android" },
-    { platform: "Chrome / Edge",      tech: "Manifest V3",          source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-extension" },
-    { platform: "Windows",            tech: "Electron · Node",      source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-desktop" },
+    {
+      platform: "Android",
+      tech: "Flutter · Kotlin",
+      source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-android",
+      downloadUrl: `${releaseBase}/reclaim-android.apk`,
+      downloadLabel: "Download APK",
+    },
+    {
+      platform: "Chrome / Edge",
+      tech: "Manifest V3",
+      source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-extension",
+      downloadUrl: `${releaseBase}/reclaim-extension.zip`,
+      downloadLabel: "Download ZIP",
+    },
+    {
+      platform: "Windows",
+      tech: "Electron · Node",
+      source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-desktop",
+      downloadUrl: `${releaseBase}/Reclaim.Setup.1.0.0.exe`,
+      downloadLabel: "Download EXE",
+    },
   ];
-  const downloadUrl = "https://github.com/yashhackz360/Reclaim/archive/refs/tags/v0.1.0-alpha.zip";
 
   return (
     <section className="section" id="choose-freedom">
@@ -525,11 +543,11 @@ function Download() {
                 <p className="dl-tech">{c.tech}</p>
                 <div className="dl-actions">
                   <a
-                    href={downloadUrl}
+                    href={c.downloadUrl}
                     className="dl-btn-label dl-btn-primary"
                     download
                   >
-                    <IconDownload /> Download
+                    <IconDownload /> {c.downloadLabel}
                   </a>
                   <a
                     href={c.source}
