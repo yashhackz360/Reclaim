@@ -1,0 +1,6 @@
+{
+  "name": "Reclaim",
+  "description": "Attention Operating System. Take back what matters.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -503,7 +503,7 @@ function IconCode() {
 
 function Download() {
   const r = useReveal();
-  // v0.2.6-alpha has desktop EXE + extension ZIP. Android parked for v0.3.
+  // Chrome Extension (ZIP) + Windows Desktop EXE + Android APK shipped in v0.3
   const releaseBase = "https://github.com/yashhackz360/Reclaim/releases/download/v0.2.6-alpha";
   const cards = [
     {
@@ -526,12 +526,12 @@ function Download() {
     },
     {
       platform: "Android",
-      tech: "Flutter · Kotlin",
+      tech: "Kotlin · Jetpack Compose",
       source: "https://github.com/yashhackz360/Reclaim/tree/main/reclaim-android",
-      downloadUrl: null,
-      downloadLabel: null,
-      comingSoon: true,
-      instructions: "Full native app with Accessibility Service — shipping in v0.3",
+      downloadUrl: `${releaseBase}/reclaim-android.apk`,
+      downloadLabel: "Download APK",
+      comingSoon: false,
+      instructions: "Enable FocusLock in Accessibility Settings after install to activate short-form video blocking",
     },
   ];
 

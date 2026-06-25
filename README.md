@@ -39,7 +39,7 @@ We enforce focus across every major platform. Dive into whatever stack you know 
 reclaim/
 ├── reclaim-web/        # Marketing website (Next.js)
 ├── reclaim-extension/  # Browser extension — Chrome, Edge, Firefox (MV3)
-├── reclaim-android/    # Android app (Flutter + Kotlin enforcement engine)
+├── reclaim-android/    # Android app (Kotlin + Jetpack Compose + Accessibility Service)
 ├── reclaim-desktop/    # Windows Desktop Agent (Electron + Windows Service)
 └── reclaim-backend/    # Firebase backend (Cloud Functions, Firestore)
 ```
@@ -62,9 +62,11 @@ npm run dev
 
 ### Android App
 ```bash
-cd reclaim-android
-flutter pub get
-flutter run
+# Open Android Studio → File → Open → select reclaim-android/
+# Let Gradle sync complete
+# Create a .env file with your GEMINI_API_KEY (see .env.example)
+# Enable FocusLock in Android Settings → Accessibility after installing
+# Run on device or emulator (API 24+)
 ```
 
 ### Windows Agent

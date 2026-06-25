@@ -1,7 +1,20 @@
 # Reclaim Android — Build Roadmap
 
-**Status:** Parked at v0.2.x — shipping in v0.3  
-The Gradle build environment is now fully set up. What remains is resolving plugin SDK version conflicts and wiring the Flutter UI to the native accessibility layer.
+**Status:** v0.3 — Native Kotlin/Jetpack Compose 🚀  
+Migrated from Flutter to native Android (Kotlin + Jetpack Compose). The old Flutter build environment, JNI conflicts, and pubspec issues are fully retired. This document tracks current state and the remaining work to reach a full production release.
+
+---
+
+## Migration Summary
+
+| | Old (v0.2.x Flutter) | New (v0.3 Native Kotlin) |
+|---|---|---|
+| UI Framework | Flutter / Dart | Jetpack Compose |
+| Build System | Flutter Gradle plugin | Standard Android Gradle (KTS) |
+| Build Issues | JNI / NDK conflicts, SDK 35/36 mismatch | ✅ Clean Gradle sync |
+| Package ID | `com.reclaim.app` (Kotlin side) | `com.reclaim.app` (unified) |
+| Theme | Flutter Material | Material 3 (dark, Compose) |
+| Firebase | Not wired | Firebase AI + Firebase Functions |
 
 ---
 
@@ -9,92 +22,58 @@ The Gradle build environment is now fully set up. What remains is resolving plug
 
 | Layer | Status | Notes |
 |-------|--------|-------|
-| Flutter UI (Dart) | Done | Screens, navigation, toggle logic |
-| Android Gradle scaffold | Done | `settings.gradle`, `build.gradle`, `AndroidManifest.xml`, `MainActivity.kt` |
-| Kotlin AccessibilityService stub | Done | Migrated to `com.reclaim.app` package |
-| CI build | Failing | Plugin SDK version mismatches (see below) |
-| APK installable and launchable | Not yet | Depends on CI fix |
-
----
-
-## Outstanding Build Errors (v0.2.6-alpha)
-
-### Error 1 — Plugin SDK Version Mismatch
-
-```
-Your project is configured to compile against Android SDK 36,
-but the following plugin(s) require a higher Android SDK version:
-  - shared_preferences_android compiles against Android SDK 36
-  - jni compiles against Android SDK 35
-  - jni_flutter compiles against Android SDK 35
-```
-
-**Root cause:** `pubspec.yaml` pulls in `jni` and `jni_flutter` as transitive dependencies of `drift` or another package. These pull in NDK 28.2 which conflicts with other plugins wanting NDK 21.x.
-
-**Fix:** Audit `pubspec.yaml` — remove any package that transitively depends on `jni`. Replace with pure-Dart alternatives.
-
----
-
-### Error 2 — JVM Target Mismatch (fixed in v0.2.6)
-
-```
-Inconsistent JVM-target compatibility detected for tasks
-'compileDebugJavaWithJavac' (1.8) and 'compileDebugKotlin' (17)
-```
-
-Fixed — both targets are now set to Java 17 in `app/build.gradle`.
+| Jetpack Compose UI (Kotlin) | ✅ Done | Dashboard, stats card, focus button, onboarding nudge |
+| Material 3 theme (dark) | ✅ Done | Slate900/800, FocusBlue, CalmTeal, WarningRose palette |
+| Gradle build scaffold | ✅ Done | AGP KTS, KSP, Compose, Firebase, Secrets plugin |
+| Package namespace | ✅ Done | `com.reclaim.app` across all files |
+| Firebase initialization | ✅ Done | `FirebaseApp.initializeApp()` in `onCreate` |
+| AccessibilityService declared | ✅ Done | Manifest + `accessibility_service_config.xml` |
+| ContentDetectionEngine | ✅ Done | YouTube, Instagram, TikTok, Facebook, X, Reddit |
+| FocusLockAccessibilityService | ✅ Done | Window event listener + back navigation + logViolation call |
+| Onboarding nudge | ✅ Done | Deep-link to Accessibility Settings when service not enabled |
+| Firebase Auth | 🔲 Pending | Login/register screen for streak + analytics sync |
+| Firestore streak display | 🔲 Pending | Read `streaks/{uid}` and show on dashboard |
+| Accountability partner UI | 🔲 Pending | View/send unlock requests from Android |
+| Room local analytics cache | 🔲 Pending | Offline storage before syncing to Firestore |
+| Signed APK / CI release | 🔲 Pending | GitHub Actions build + upload to releases |
 
 ---
 
 ## Plan of Action
 
-### Phase 1 — Fix the CI Build (Est: 1–2 hrs)
+### Phase 1 — Firebase Auth (Est: 2–3 hrs)
 
-- [ ] Audit `pubspec.yaml` — run `flutter pub deps` and trace which package pulls in `jni` / `jni_flutter`
-- [ ] Remove conflicting packages — likely `drift` or `isar`. Replace with `shared_preferences` (already a dep) for simple key-value storage
-- [ ] Remove `drift` / `isar` imports from Dart code if present
-- [ ] Verify build locally — `flutter build apk --debug` in `reclaim-android/`
-- [ ] Push — CI should produce a green APK artifact
+- [ ] Add `google-services.json` to `app/` (from Firebase Console)
+- [ ] Add `FirebaseAuth` login screen (email/Google sign-in)
+- [ ] Pass `uid` from Auth to `FocusLockAccessibilityService` for `logViolation` calls
+- [ ] Store `fcmToken` in Firestore `users/{uid}` on first login
 
-### Phase 2 — Connect Flutter UI to Native Layer (Est: 2–3 hrs)
+### Phase 2 — Live Dashboard Stats (Est: 2–3 hrs)
 
-The Flutter `lib/` code currently uses boolean state flags instead of real native services. Wire these up:
+- [ ] Create a `DashboardViewModel` with `StateFlow`
+- [ ] Read `analytics/{uid}/daily/{today}` from Firestore on app open
+- [ ] Replace hardcoded "2.5 hrs" / "43 distractions" with live data
+- [ ] Read `streaks/{uid}` and display current streak badge
 
-- [ ] Create `lib/services/accessibility_bridge.dart` platform channel:
-  ```dart
-  static const _channel = MethodChannel('com.reclaim.app/accessibility');
-  static Future<bool> isEnabled() async {
-    return await _channel.invokeMethod('isEnabled');
-  }
-  ```
-- [ ] Implement the method channel handler in `MainActivity.kt`:
-  ```kotlin
-  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.reclaim.app/accessibility")
-      .setMethodCallHandler { call, result ->
-          if (call.method == "isEnabled") {
-              val am = getSystemService(ACCESSIBILITY_SERVICE) as AccessibilityManager
-              result.success(am.isEnabled)
-          }
-      }
-  ```
-- [ ] Add onboarding screen to prompt user to enable accessibility service (deep link to Settings)
-- [ ] Implement `onAccessibilityEvent` in `FocusLockAccessibilityService.kt` to detect and hide Shorts/Reels
+### Phase 3 — Accountability Partner UI (Est: 3–4 hrs)
 
-### Phase 3 — Content Detection Engine (Est: 3–4 hrs)
+- [ ] List screen: show current `block_rules` from Firestore
+- [ ] Unlock request flow: POST to `unlock_requests` collection
+- [ ] Partner view: approve/reject incoming requests
+- [ ] Push notifications: receive FCM and route to `UnlockRequest` screen
 
-`ContentDetectionEngine.kt` is stubbed. Implement per-platform:
+### Phase 4 — Room Local Cache (Est: 1–2 hrs)
 
-- [ ] YouTube Shorts — detect `com.google.android.youtube` package + `/shorts/` URL pattern via `AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED`
-- [ ] Instagram Reels — detect Reels tab via `com.instagram.android` + view ID `clips_tab`
-- [ ] TikTok — full-screen video in `com.zhiliaoapp.musically`
-- [ ] Block action — use `performGlobalAction(GLOBAL_ACTION_BACK)` or overlay a blocking screen
+- [ ] Define `ViolationEntity` with Room
+- [ ] Buffer violations locally when offline
+- [ ] Sync buffer to Firebase on connectivity restore
 
-### Phase 4 — Polish and Release (Est: 1 hr)
+### Phase 5 — Release (Est: 1 hr)
 
-- [ ] Generate proper launcher icon in all densities using `flutter_launcher_icons` package
-- [ ] Test on physical device or emulator (API 34+)
-- [ ] Push `v0.3.0` tag — CI produces signed debug APK
-- [ ] Update website download link from "Coming soon" to real APK URL
+- [ ] Generate launcher icons with correct Reclaim brand
+- [ ] Sign with upload key — set `KEYSTORE_PATH`, `STORE_PASSWORD`, `KEY_PASSWORD` in CI secrets
+- [ ] GitHub Actions workflow: build APK → upload to `v0.3.0` release
+- [ ] Update web download link from `v0.2.6-alpha` to `v0.3.0`
 
 ---
 
@@ -102,46 +81,45 @@ The Flutter `lib/` code currently uses boolean state flags instead of real nativ
 
 | File | Purpose |
 |------|---------|
-| [`android/app/build.gradle`](./android/app/build.gradle) | Gradle config — SDK versions, NDK, plugins |
-| [`android/settings.gradle`](./android/settings.gradle) | Flutter Gradle plugin declaration |
-| [`android/gradle/wrapper/gradle-wrapper.properties`](./android/gradle/wrapper/gradle-wrapper.properties) | Gradle version (must be >= 8.7 for Flutter 3.44) |
-| [`android/app/src/main/AndroidManifest.xml`](./android/app/src/main/AndroidManifest.xml) | App manifest — Flutter v2 embedding, service declarations |
-| [`android/app/src/main/kotlin/com/reclaim/app/MainActivity.kt`](./android/app/src/main/kotlin/com/reclaim/app/MainActivity.kt) | Kotlin entry point |
-| [`android/app/src/main/kotlin/com/reclaim/app/services/FocusLockAccessibilityService.kt`](./android/app/src/main/kotlin/com/reclaim/app/services/FocusLockAccessibilityService.kt) | Accessibility service stub — needs full implementation |
-| [`android/app/src/main/kotlin/com/reclaim/app/detection/ContentDetectionEngine.kt`](./android/app/src/main/kotlin/com/reclaim/app/detection/ContentDetectionEngine.kt) | Content detection engine stub — needs per-platform logic |
-| [`lib/main.dart`](./lib/main.dart) | Flutter app entry |
-| [`pubspec.yaml`](./pubspec.yaml) | Flutter dependencies — audit this for jni/drift |
+| [`app/src/main/java/com/reclaim/app/MainActivity.kt`](./app/src/main/java/com/reclaim/app/MainActivity.kt) | Compose entry point, accessibility check, onboarding nudge |
+| [`app/src/main/java/com/reclaim/app/services/FocusLockAccessibilityService.kt`](./app/src/main/java/com/reclaim/app/services/FocusLockAccessibilityService.kt) | Core blocking service — window event listener + Firebase logging |
+| [`app/src/main/java/com/reclaim/app/detection/ContentDetectionEngine.kt`](./app/src/main/java/com/reclaim/app/detection/ContentDetectionEngine.kt) | Per-platform detection logic (YouTube, Instagram, TikTok, etc.) |
+| [`app/src/main/java/com/reclaim/app/ui/theme/`](./app/src/main/java/com/reclaim/app/ui/theme/) | Material 3 color scheme, typography, dark theme |
+| [`app/src/main/res/xml/accessibility_service_config.xml`](./app/src/main/res/xml/accessibility_service_config.xml) | Accessibility service metadata & package filter |
+| [`app/build.gradle.kts`](./app/build.gradle.kts) | Gradle config — SDK, dependencies, secrets |
+| [`.env.example`](./.env.example) | Gemini API key template |
 
 ---
 
 ## Testing the Build Locally
 
 ```bash
-cd reclaim-android
+# Open in Android Studio
+# File → Open → select reclaim-android/
 
-# Check for dependency conflicts
-flutter pub deps | grep -E "jni|drift|isar"
-
-# Build debug APK
-flutter build apk --debug
+# Or from command line (requires ANDROID_HOME set):
+./gradlew assembleDebug
 
 # Install on connected device
-flutter install
+adb install app/build/outputs/apk/debug/app-debug.apk
 
-# Check accessibility service is visible in Settings
+# Verify accessibility service visible
 adb shell settings get secure enabled_accessibility_services
 ```
 
 ---
 
-## References
+## Backend Integration Reference
 
-- Flutter Gradle new format: https://flutter.dev/to/flutter-gradle-plugin-apply
-- Flutter Accessibility: https://docs.flutter.dev/platform-integration/android/accessibility
-- Android Accessibility Service Guide: https://developer.android.com/guide/topics/ui/accessibility/service
-- jni package conflict: https://pub.dev/packages/jni — requires SDK 35+, NDK 28
+The Android app calls the following Firebase Cloud Functions (defined in `reclaim-backend/functions/index.js`):
+
+| Function | Trigger | Called From |
+|---|---|---|
+| `logViolation` | HTTPS Callable | `FocusLockAccessibilityService` on each block |
+| `onUserCreate` | Auth trigger | Runs automatically on first sign-in |
+| `dailyStreakEvaluator` | Pub/Sub 00:00 UTC | Server-side — evaluates yesterday's violations |
 
 ---
 
-Estimated total effort to ship v0.3: 8–10 hours of focused work.  
-The Gradle infrastructure is solid. The remaining work is pure application logic.
+Estimated total effort to reach full v0.3 production: **8–10 hours**.  
+The native Kotlin foundation is solid. The remaining work is UI screens and Firebase data binding.

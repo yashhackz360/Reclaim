@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Reclaim</string>
+    <string name="accessibility_service_label">FocusLock — Reclaim Attention Shield</string>
+    <string name="accessibility_service_description">FocusLock monitors app windows to detect and block short-form video content (YouTube Shorts, Instagram Reels, TikTok) and help you reclaim your attention.</string>
+</resources>
