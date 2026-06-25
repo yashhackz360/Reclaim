@@ -6,11 +6,21 @@
   "description": "Eliminate YouTube Shorts, Instagram Reels, TikTok, and addictive short-form content. Reclaim your focus.",
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "Reclaim"
+    "default_title": "Reclaim",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "background": {
     "service_worker": "background/service-worker.js",
     "type": "module"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "content_scripts": [
     {

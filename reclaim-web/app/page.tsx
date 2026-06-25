@@ -3,18 +3,31 @@
 import { useState, useEffect, useRef } from "react";
 
 /* ─── Icons (Calm & Open) ─────────────────────────────── */
-function IconSunrise({ size = 18 }: { size?: number }) {
+function IconBowArrow({ size = 18 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 44 44" fill="none">
-      {/* 3 rays */}
-      <line x1="22" y1="32" x2="22" y2="16" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
-      <line x1="22" y1="32" x2="9"  y2="24" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
-      <line x1="22" y1="32" x2="35" y2="24" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round"/>
-      {/* Arc */}
-      <path d="M 6 32 A 16 16 0 0 1 38 32" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
-      {/* Broken horizon */}
-      <line x1="0"  y1="32" x2="13" y2="32" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
-      <line x1="31" y1="32" x2="44" y2="32" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="goldenGlow" cx="50%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="#FEF08A" stop-opacity="1" />
+          <stop offset="20%" stop-color="#FDE047" stop-opacity="0.9" />
+          <stop offset="50%" stop-color="#CA8A04" stop-opacity="0.7" />
+          <stop offset="100%" stop-color="#451A03" stop-opacity="1" />
+        </radialGradient>
+        <linearGradient id="goldMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FEF08A" />
+          <stop offset="40%" stop-color="#EAB308" />
+          <stop offset="60%" stop-color="#CA8A04" />
+          <stop offset="100%" stop-color="#854D0E" />
+        </linearGradient>
+      </defs>
+      <rect width="100" height="100" rx="20" fill="url(#goldenGlow)" />
+      <path d="M 13 52 L 50 82 L 87 52" stroke="#FEF08A" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0.8" />
+      <path d="M 13 52 C 13 75, 35 72, 45 62 Q 50 57, 55 62 C 65 72, 87 75, 87 52" stroke="url(#goldMetal)" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+      <path d="M 13 52 C 8 52, 6 45, 12 45 C 16 45, 16 50, 13 52" stroke="url(#goldMetal)" strokeWidth="2" fill="none" />
+      <path d="M 87 52 C 92 52, 94 45, 88 45 C 84 45, 84 50, 87 52" stroke="url(#goldMetal)" strokeWidth="2" fill="none" />
+      <line x1="50" y1="84" x2="50" y2="24" stroke="url(#goldMetal)" strokeWidth="2.5" strokeLinecap="round" />
+      <polygon points="50 14, 44 28, 50 25, 56 28" fill="#FEF08A" />
+      <path d="M 50 78 L 44 86 M 50 72 L 44 80 M 50 66 L 44 74 M 50 78 L 56 86 M 50 72 L 56 80 M 50 66 L 56 74" stroke="url(#goldMetal)" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }
@@ -102,7 +115,7 @@ function Nav() {
       <div className="nav-inner">
         <a href="/" className="nav-brand" aria-label="Reclaim Home">
           <span className="nav-brand-mark" aria-hidden="true">
-            <IconSunrise size={18} />
+            <IconBowArrow size={18} />
           </span>
           Reclaim
         </a>
@@ -504,7 +517,7 @@ function IconCode() {
 function Download() {
   const r = useReveal();
   // Chrome Extension (ZIP) + Windows Desktop EXE + Android APK shipped in v0.3
-  const releaseBase = "https://github.com/yashhackz360/Reclaim/releases/download/v0.2.6-alpha";
+  const releaseBase = "https://github.com/yashhackz360/Reclaim/releases/download/v0.3.0";
   const cards = [
     {
       platform: "Chrome / Edge",
@@ -604,7 +617,7 @@ function Footer() {
           <div>
             <a href="#top" className="footer-brand" aria-label="Reclaim Home">
               <span className="footer-brand-mark" aria-hidden="true">
-                <IconSunrise size={18} />
+                <IconBowArrow size={18} />
               </span>
               Reclaim
             </a>
